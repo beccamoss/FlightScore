@@ -1,6 +1,5 @@
 import os
 import collections
-import pprint
 
 #files = ['raw/tenflights.csv']
 files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
@@ -10,7 +9,7 @@ files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
 CANCELLED_OR_DIVERTED = -1
 DELAY_THRESHOLD = 15
 WEIGHT_PCT_FLIGHTS_DELAYED = 1
-WEIGHT_AVG_MIN_DELAYED = 1
+WEIGHT_AVG_MIN_DELAYED = .01
 
 def makehash():
     return collections.defaultdict(makehash)
@@ -58,7 +57,7 @@ class FlightInfo(object):
 def load_flight_data():
     """  Loop through input files and load all the flight info into the nested
     dictionary object raw_flight_data """
-    
+   
     for monthly_file in files:
         f = open(monthly_file, "r")
 
@@ -109,16 +108,22 @@ def load_flight_data():
 def write_flight_data_to_file():
     """ Writes flights stats to a file """
 
-    f = open("stats.csv", "w")
+    f = open("seed_data/flights.csv", "w")
 
-    f.write("origin,destination,carrier,quarter,time,min_delay,duration,num_flights,num_delayed,num_canceldivert,score\n")
+    f.write("origin,destination,carrier,quarter,time,avg_delay,avg_duration,num_flights,num_delayed,num_canceldivert,score\n")
     for k in raw_flight_data:
         for j in raw_flight_data[k]:
             for m in raw_flight_data[k][j]:
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
                         d = raw_flight_data[k][j][m][n][o]
-                        f.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(k, j, m, n, o.strip(), d.min_delay, d.duration, d.num_flights, d.num_delay, d.num_cancelled_diverted, d.score))
+                        f.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(k, j, m, n, o.strip(),
+                                                                            d.min_delay/d.num_delay,
+                                                                            d.duration/d.num_flights,
+                                                                            d.num_flights,
+                                                                            d.num_delay,
+                                                                            d.num_cancelled_diverted,
+                                                                            d.score))
     f.close()
     return
 
@@ -140,8 +145,6 @@ def calculate_flight_score():
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
                         flight_data = raw_flight_data[k][j][m][n][o]
-                        avg_min_delay = flight_data.min_delay / flight_data.duration
-                        pct_flights_delay = flight_data.num_delay / flight_data.num_flights
                         if flight_data.num_delay == 0:
                             flight_data.num_delay = 1 # make sure we don't divide by zero!
                         flight_score = (WEIGHT_AVG_MIN_DELAYED * flight_data.min_delay / float(flight_data.num_delay)) + \
@@ -165,7 +168,6 @@ def calculate_flight_score():
                         flight_data = raw_flight_data[k][j][m][n][o]
                         new_score = (flight_data.score - min_flight_score) / (max_flight_score - min_flight_score)
                         raw_flight_data[k][j][m][n][o].score = new_score
-                        #raw_flight_data[k][j][m][n][o].score = flight_data.score
                         
     return
 
