@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>FlightScore</h1> 
+<h3>Flight Results</h3>
+
+{% for flight in results %}
+Airline: {{ flight["airline_code"] }}
+Flight Number: {{ flight["flight_num"] }}
+Origin: {{ flight["origin_code"] }}
+Destination: {{ flight["destination_code"] }}
+Departure: {{ flight["departure_datetime"] }}
+Arrival: {{ flight ["arrival_datetime"] }}
+Duration:  {{ flight["duration"] }}
+Price: {{ flight["price"] }}
+Score: {{ flight["score"]}}
+{% endfor %}
+{% endblock %}

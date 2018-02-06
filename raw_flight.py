@@ -136,6 +136,7 @@ def calculate_flight_score():
 
     min_flight_score = 1000
     max_flight_score = 0
+    
     # first loop through data to calculate the avg min delay and the pct flights
     # delayed, combine these to a flight score and keep track of the MAX(flightscore)
     # and MIN(flightscore) so we can normalize data between 0-1
