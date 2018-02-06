@@ -31,6 +31,12 @@ def load_airports():
     for row in open("seed_data/airports.txt"):
         row = row.strip()
         code, description = row.split("|")
+
+        # just keep the city and state in the description
+        index = description.find(':')
+        if index > 0:
+            description = description[:index]
+
         airport = Airport(airport_id=code, description=description)
 
         # Add each airport to the session
@@ -50,7 +56,7 @@ def load_carriers():
         else:
             name = name[:-10] # strip the year from the name of the carrier
         # import pdb; pdb.set_trace()
-        
+
         carrier = Carrier(carrier_id=code, name=name, img="")
 
         # Add each airport to the session
@@ -59,11 +65,6 @@ def load_carriers():
     # Once we're done, commit all the carriers to the database
     db.session.commit()
     return
-
-def remove_year_from_name(name):
-
-
-    return name
 
 if __name__ == "__main__":
     connect_to_db(app)

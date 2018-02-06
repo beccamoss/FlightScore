@@ -8,6 +8,7 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session)
 
 from model import Flight, Carrier, Airport, connect_to_db, db
+from functions import get_flight_results
 
 app = Flask(__name__)
 
@@ -23,8 +24,21 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    airports = Airport.query.all()
+    return render_template("home.html", airports=airports)
 
-    return render_template("home.html")
+@app.route('/search')
+def search_flights():
+    
+    # Get input from form
+    origin = request.args.get("origin")
+    destination = request.args.get("destination")
+    date = request.args.get("date")
+
+    # use the user's input to search the Google Flight API for results
+    results = get_flight_results(origin, destination, date)
+
+    return render_template("results.html", results=results)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

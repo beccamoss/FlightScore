@@ -1,7 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
-  <h1>FlightScore</h1> 
-  Hello 
+<h1>FlightScore</h1> 
 
+<form action="/search">
+    Origin:
+    <div>
+    <select name='origin'>
+        {% for airport in airports %}
+        <option value={{ airport.airport_id }}>
+            {{ airport.airport_id }}, {{ airport.description}}
+        </option>
+        {% endfor %}
+    </select>
+    </div>
+    <br><br>
+    Destination:
+    <div>
+    <select name='destination'>
+        {% for airport in airports %}
+        <option value={{ airport.airport_id }}>
+            {{ airport.airport_id }}, {{ airport.description}}
+        </option>
+        {% endfor %}
+    </select>
+    </div>
+    <br><br>
+    Date:
+    <div>
+    <input id="date" name="date" type="date">
+    </div>
+    <br><br>
+    <input type='submit' value='Search Flights'>
+</form>
 {% endblock %}
