@@ -1,18 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="row">
+<div class="col-lg-8 col-lg-offset-2">
 <h1>FlightScore</h1> 
-<h3>Flight Results</h3>
+<h3>Search Results</h3>
+<div>    
+    Sort By:  <select id="sort">
+        <option value="price">Price</option>
+        <option value="score">Score</option>
+        <option value="time">Departure Time</option>
+    </select>
+</div>
+</div>
 
-{% for flight in results %}
-Airline: {{ flight["airline_code"] }}
-Flight Number: {{ flight["flight_num"] }}
-Origin: {{ flight["origin_code"] }}
-Destination: {{ flight["destination_code"] }}
-Departure: {{ flight["departure_datetime"] }}
-Arrival: {{ flight ["arrival_datetime"] }}
-Duration:  {{ flight["duration"] }}
-Price: {{ flight["price"] }}
-Score: {{ flight["score"]}}
-{% endfor %}
+<div class="row">
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 hidden-xs">
+<table class="table table-striped sortable">
+<thead>
+    <tr>
+        <th>Score</th>
+        <th>Price</th>
+        <th class="sorttable_nosort">Airline</th>
+        <th class="sorttable_nosort">Flight</th>
+        <th class="sorttable_nosort">From</th>
+        <th class="sorttable_nosort">To</th>
+        <th>Depart</th>
+        <th>Arrive</th>
+    </tr>
+</thead>
+<tbody id="flights">
+    {% for flight in results %}
+    <tr>
+        <td>{{ flight["score"].score }}</td>
+        <td>${{ flight["price"][3:] }}</td>
+        <td>{{ flight['carrier'][0][0] }}</td>
+        <td>{{ flight['airline_code'] }} #{{ flight['flight_num'] }}</td>
+        <td>{{ flight['origin_code'] }} - {{ origin }}</td>
+        <td>{{ flight['destination_code'] }} - {{ destination }}</td>
+        <td>{{ flight['departure_datetime'] }}</td>
+        <td>{{ flight['arrival_datetime'] }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+</div>
+</div>
+<br>
+
+<script type="text/javascript">
+    var sortBy = document.getElementById('sort');
+
+    // 
+    sortBy.onchange = function() {
+        alert(sortBy.value);
+
+        // $('flights').load('/sort-results?order=' + sortBy.value + "&results=" + {{ results }} );
+    }
+
+</script>
 {% endblock %}
