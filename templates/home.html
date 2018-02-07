@@ -8,7 +8,7 @@
     <div>
     <select name='origin'>
         {% for airport in airports %}
-        <option value={{ airport.airport_id }}>
+        <option value="{{airport.airport_id}}|{{ airport.description }}">
             {{ airport.airport_id }}, {{ airport.description}}
         </option>
         {% endfor %}
@@ -19,7 +19,7 @@
     <div>
     <select name='destination'>
         {% for airport in airports %}
-        <option value={{ airport.airport_id }}>
+        <option value="{{airport.airport_id}}|{{ airport.description }}">
             {{ airport.airport_id }}, {{ airport.description}}
         </option>
         {% endfor %}
