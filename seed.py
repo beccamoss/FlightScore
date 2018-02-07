@@ -51,7 +51,9 @@ def load_carriers():
         row = row.strip()
         code, name = row.split("|")
 
-        if name[-3:-2] != "-": # check if carrier was in operation in 2017
+        # check if carrier was in operation in 2017, skip if the year format
+        # doesn't end in .... (year - )
+        if name[-3:-2] != "-": 
             continue
         else:
             name = name[:-10] # strip the year from the name of the carrier

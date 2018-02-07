@@ -8,7 +8,7 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session)
 
 from model import Flight, Carrier, Airport, connect_to_db, db
-from functions import get_flight_results
+from functions import get_flight_results, update_results_for_display
 
 app = Flask(__name__)
 
@@ -31,14 +31,30 @@ def index():
 def search_flights():
     
     # Get input from form
-    origin = request.args.get("origin")
-    destination = request.args.get("destination")
+    print request.args
+    origin, origin_description = request.args.get("origin").split('|')
+    destination, destination_description = request.args.get("destination").split('|')
     date = request.args.get("date")
 
+
     # use the user's input to search the Google Flight API for results
+    # in addition, also query the database to get the correcsponding FlightScore
     results = get_flight_results(origin, destination, date)
 
-    return render_template("results.html", results=results)
+    # extract just the time of the flight arrival and departure
+    results = update_results_for_display(results)
+
+
+    return render_template("results.html",
+                            results=results,
+                            origin=origin_description,
+                            destination=destination_description)
+
+@app.route('/sort-results')
+def sort_results():
+
+    print request.args
+    return "hi"
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

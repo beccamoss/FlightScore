@@ -4,6 +4,10 @@ import os
 from model import Flight, Carrier, Airport, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
+MORNING = 1
+AFTERNOON = 2
+EVENING = 3
+REDEYE = 4
 
 def query_QPX(parameter):
     """Send query with parameter and url to QPX"""  
@@ -50,16 +54,21 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    flight_request = query_QPX(parameter)
-    python_result = QPX_results(flight_request)
+    # flight_request = query_QPX(parameter)
+    # python_result = QPX_results(flight_request)
 
-    # Output results for debugging
-    print_flight_results(python_result)
+    # write out results to file for reuse. Limited to 50 API calls/day
+    # with open('test/flights.txt', 'w') as outfile:
+    #     json.dump(python_result, outfile)
+    
+    # read in test data instead of calling API.  Limited to 50 API calls/day
+    with open('test/flights.txt', 'r') as f:
+        python_result = json.load(f)
 
     # Take the result and parse to just get the information we need
-    # flights = parse_flight_results(python_result)
+    flights = parse_flight_results(python_result)
 
-    return 
+    return flights
 
 def parse_flight_results(python_result):
     """ take the API search result and parse it.  Put the relevant info into a flight_info
@@ -82,18 +91,17 @@ def parse_flight_results(python_result):
                                                             flight_info["origin_code"],
                                                             flight_info["destination_code"],
                                                             flight_info["departure_datetime"])
+                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"])
                 flights.append(flight_info)
     return flights
 
 def get_score_for_flight(carrier, origin, destination, flight_datetime):
     """ given a flight search result, query the database to get the
     corresponding FlightScore, return that score """
-    
+   
     month = int(flight_datetime[5:7])
     hour = int(flight_datetime[11:13])
-    
-    # import pdb; pdb.set_trace()
-
+   
     # Set the quarter of the year by the month
     if month < 4:
         quarter = 1
@@ -105,28 +113,34 @@ def get_score_for_flight(carrier, origin, destination, flight_datetime):
         quarter = 4
 
     # Set the slice of day by the hour:
-    # 1 = 5:00-11:00
-    # 2 = 11:00-17:00
-    # 3 = 17:00-23:00
-    # 4 = 23:00-5:00
     if (hour >= 5) and (hour < 11):
-        time = 1
+        time = MORNING
     elif (hour >= 11) and (hour < 17):
-        time = 2
+        time = AFTERNOON
     elif (hour >= 17) and (hour < 23):
-        time = 3
+        time = EVENING
     else:
-        time = 4    
+        time = REDEYE
 
-    score = db.session.query(Flight).filter(Flight.carrier==carrier,
-                                            Flight.origin==origin,
-                                            Flight.destination==destination,
-                                            Flight.quarter==quarter,
-                                            Flight.time==time).first()
+    score = db.session.query(Flight).filter(Flight.carrier == carrier,
+                                            Flight.origin == origin,
+                                            Flight.destination == destination,
+                                            Flight.quarter == quarter,
+                                            Flight.time == time).first()
+
     return score
-    
 
+def update_results_for_display(results):
+    """ Update departure and arrival time, origin and destination fields and airline
+    info for display purpose on results.html 
+    """
 
+    for flight in results:
+        flight["arrival_datetime"] = flight["arrival_datetime"][11:16]
+        flight["departure_datetime"] = flight["departure_datetime"][11:16]
+
+    return results
+            
 def print_flight_results(python_result):
     """ display function for debugging purposes """
 
@@ -143,4 +157,4 @@ def print_flight_results(python_result):
         print "Price: ", flight["price"]
         print
 
-    return flights
+    return

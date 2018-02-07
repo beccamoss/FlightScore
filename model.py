@@ -26,10 +26,9 @@ class Flight(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<flight_id={} origin={} dest={} carrier={} time={} quarter={} num_flights={} num_delayed={} duration={} min_delay={} score={}>". \
-                format(self.flight_id, self.origin, self.destination, self.carrier,
-                       self.time, self.quarter, self.num_flights, self.num_delayed,
-                       self.duration, self.avg_delay, self.score)
+        return "<#_flights={} #_delay={} duration={} avg_delay={}>". \
+                format(self.num_flights, self.num_delayed,
+                       self.duration, self.avg_delay)
 
 class Airport(db.Model):
     """ Data on airports """
