@@ -110,16 +110,18 @@ def write_flight_data_to_file():
 
     f = open("seed_data/flights.csv", "w")
 
-    f.write("origin,destination,carrier,quarter,time,avg_delay,avg_duration,num_flights,num_delayed,num_canceldivert,score\n")
+    #f.write("origin,destination,carrier,quarter,time,avg_delay,avg_duration,num_flights,num_delayed,num_canceldivert,score\n")
     for k in raw_flight_data:
         for j in raw_flight_data[k]:
             for m in raw_flight_data[k][j]:
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
                         d = raw_flight_data[k][j][m][n][o]
+                        avg_delay = d.min_delay // d.num_delay
+                        duration = d.duration // d.num_flights
                         f.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(k, j, m, n, o.strip(),
-                                                                            d.min_delay/d.num_delay,
-                                                                            d.duration/d.num_flights,
+                                                                            avg_delay,
+                                                                            duration,
                                                                             d.num_flights,
                                                                             d.num_delay,
                                                                             d.num_cancelled_diverted,
@@ -136,7 +138,7 @@ def calculate_flight_score():
 
     min_flight_score = 1000
     max_flight_score = 0
-    
+
     # first loop through data to calculate the avg min delay and the pct flights
     # delayed, combine these to a flight score and keep track of the MAX(flightscore)
     # and MIN(flightscore) so we can normalize data between 0-1
