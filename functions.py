@@ -79,6 +79,8 @@ def parse_flight_results(python_result):
         for flight_slice in python_result["trips"]["tripOption"][j]["slice"]:
             for flight_segment in flight_slice["segment"]:
                 flight_info = {}
+
+                # Extract the info we need from the API result and add key-value pairs to dictionary
                 flight_info["price"] = python_result["trips"]["tripOption"][j]["saleTotal"]
                 flight_info["airline_code"] = flight_segment["flight"]["carrier"]
                 flight_info["flight_num"] = flight_segment["flight"]["number"]
@@ -87,15 +89,29 @@ def parse_flight_results(python_result):
                 flight_info["departure_datetime"] = flight_segment["leg"][0]["departureTime"]
                 flight_info["arrival_datetime"] = flight_segment["leg"][0]["arrivalTime"]
                 flight_info["duration"] = flight_segment["leg"][0]["duration"]
-                flight_info["score"] = get_score_for_flight(flight_info["airline_code"],
-                                                            flight_info["origin_code"],
-                                                            flight_info["destination_code"],
-                                                            flight_info["departure_datetime"])
-                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"])
+
+                # Get the past history flight data and score for matching flight from db
+                flight = get_matching_flight_from_db(flight_info["airline_code"],
+                                                     flight_info["origin_code"],
+                                                     flight_info["destination_code"],
+                                                     flight_info["departure_datetime"])
+
+                # Set more key-value pairs in the dictionary from this database query
+                # import pdb; pdb.set_trace()
+                flight_info["score"] = flight.score
+                flight_info["avg_delay"] = flight.avg_delay
+                flight_info["percent_delay"] = flight.num_delayed / float(flight.num_flights)
+                flight_info["num_flights"] = flight.num_flights
+
+                # Query the Carrier table to get the full name of the airline
+                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight.carrier)
+
+                # Append this dictionary to the flights list
                 flights.append(flight_info)
+
     return flights
 
-def get_score_for_flight(carrier, origin, destination, flight_datetime):
+def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     """ given a flight search result, query the database to get the
     corresponding FlightScore, return that score """
    
@@ -122,13 +138,13 @@ def get_score_for_flight(carrier, origin, destination, flight_datetime):
     else:
         time = REDEYE
 
-    score = db.session.query(Flight).filter(Flight.carrier == carrier,
+    flight = db.session.query(Flight).filter(Flight.carrier == carrier,
                                             Flight.origin == origin,
                                             Flight.destination == destination,
                                             Flight.quarter == quarter,
                                             Flight.time == time).first()
 
-    return score
+    return flight
 
 def update_results_for_display(results):
     """ Update departure and arrival time, origin and destination fields and airline
