@@ -2,14 +2,16 @@ import os
 import collections
 
 #files = ['raw/tenflights.csv']
+#files = ['test/test1.csv', 'test/test2.csv']
 files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
          'raw/april2017.csv', 'raw/may2017.csv', 'raw/june2017.csv',
          'raw/july2017.csv', 'raw/august2017.csv', 'raw/september2017.csv',
          'raw/october2017.csv', 'raw/november2017.csv', 'raw/december2016.csv']
 CANCELLED_OR_DIVERTED = -1
-DELAY_THRESHOLD = 15
+DELAY_THRESHOLD = 30
 WEIGHT_PCT_FLIGHTS_DELAYED = 1
-WEIGHT_AVG_MIN_DELAYED = .01
+WEIGHT_AVG_MIN_DELAYED = .8
+WEIGHT_CANCEL_DIVERT = .1
 
 def makehash():
     return collections.defaultdict(makehash)
@@ -20,32 +22,34 @@ class FlightInfo(object):
         """ Create and initialize a new flight object and add to the nested 
         dictionary raw_flight_data if this is a new flight record"""
 
-        if min_delay >= 0:
-            self.min_delay = min_delay
-            self.num_cancelled_diverted = 0
-        else:
-            self.min_delay = 0
-            self.num_cancelled_diverted = 1
         self.duration = duration
         self.num_flights = 1
         if min_delay >= DELAY_THRESHOLD:
             self.num_delay = 1
+            self.min_delay = min_delay
+            self.num_cancelled_diverted = 0
+        elif min_delay < 0:
+            self.num_delay = 0
+            self.min_delay = 0
+            self.num_cancelled_diverted = 1
         else:
             self.num_delay = 0
+            self.min_delay = 0
+            self.num_cancelled_diverted = 0
+
         self.score = 0
 
     def update_flight_info(self, min_delay, duration):
         """ If the flight info for has already been added to the raw_flight_data
         object, then update that record with the new flight info"""
 
-        if min_delay >= 0: # make sure flight not cancelled or diverted
+        if min_delay >= DELAY_THRESHOLD:
             self.min_delay += min_delay
-        else:
+            self.num_delay += 1
+        elif min_delay < 0: # flight cancelled
             self.num_cancelled_diverted += 1
         self.duration += duration
         self.num_flights += 1
-        if min_delay >= DELAY_THRESHOLD:
-            self.num_delay += 1
 
     def add_or_update_flight_score(self, score):
         """ Add calculated flight score to raw_flight_data object """
@@ -103,7 +107,7 @@ def load_flight_data():
                 # add new FlightInfo object as value to new origin key
                 raw_flight_data[origin][destination][carrier][quarter][slice_day] = FlightInfo(min_delay, duration)
         f.close()
-        return
+    return
 
 def write_flight_data_to_file():
     """ Writes flights stats to a file """
@@ -117,7 +121,10 @@ def write_flight_data_to_file():
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
                         d = raw_flight_data[k][j][m][n][o]
-                        avg_delay = d.min_delay // d.num_delay
+                        if d.num_delay == 0:
+                            avg_delay = 0
+                        else:
+                            avg_delay = d.min_delay // d.num_delay
                         duration = d.duration // d.num_flights
                         f.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(k, j, m, n, o.strip(),
                                                                             avg_delay,
@@ -148,10 +155,20 @@ def calculate_flight_score():
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
                         flight_data = raw_flight_data[k][j][m][n][o]
+
+                        # Calculate FlightScore as a weighted combination of:
+                        # 1. The percentage of flights delayed
+                        # 2. The average minutes delayed for all delayed flights
+                        # 3. The percentage of flights cancelled or diverted
                         if flight_data.num_delay == 0:
-                            flight_data.num_delay = 1 # make sure we don't divide by zero!
-                        flight_score = (WEIGHT_AVG_MIN_DELAYED * flight_data.min_delay / float(flight_data.num_delay)) + \
-                                       (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights))
+                            # no flight delays, so don't add that in the calculation
+                            flight_score = (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights)) + \
+                                           (WEIGHT_CANCEL_DIVERT * flight_data.num_cancelled_diverted / float(flight_data.num_flights))
+                        else:
+                            flight_score = (WEIGHT_AVG_MIN_DELAYED * flight_data.min_delay / float(flight_data.num_delay)) + \
+                                           (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights)) + \
+                                           (WEIGHT_CANCEL_DIVERT * flight_data.num_cancelled_diverted / float(flight_data.num_flights))
+
                         raw_flight_data[k][j][m][n][o].score = flight_score
                         # Track and update new min/max flight scores for normalization below
                         if flight_score > max_flight_score:

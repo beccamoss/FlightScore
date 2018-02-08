@@ -19,6 +19,7 @@ class Flight(db.Model):
     time = db.Column(db.Integer)
     num_flights = db.Column(db.Integer)
     num_delayed = db.Column(db.Integer)
+    num_cancel_divert = db.Column(db.Integer)
     duration = db.Column(db.Integer)
     avg_delay = db.Column(db.Integer)
     score = db.Column(db.Float)

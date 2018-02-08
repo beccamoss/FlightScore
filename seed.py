@@ -17,7 +17,7 @@ def load_flights():
 
         flight = Flight(origin=origin, destination=destination, carrier=carrier,
                         quarter=int(quarter), time=int(time), num_flights=int(num_flights),
-                        num_delayed=int(num_delay), duration=int(duration), 
+                        num_delayed=int(num_delay), num_cancel_divert=int(num_can_div), duration=int(duration), 
                         avg_delay=int(avg_delay), score=float(score))
 
         # Add each flight to the session
