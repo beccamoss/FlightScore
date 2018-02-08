@@ -6,6 +6,7 @@
 <h1>FlightScore</h1> 
 <h3>Search Results</h3>
 </div>
+</div>
 
 <div class="row">
 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 hidden-xs">
@@ -26,10 +27,11 @@
     {% for flight in results %}
     <tr>
         <td>
-            <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">{{ flight["score"] }}</button>
+          <!-- Trigger the modal with a button -->
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>{{ '%0.4f' % flight["score"] }}</button>
+        
             <!-- Modal -->
-          <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog">
             <div class="modal-dialog modal-sm">
             
               <!-- Modal content-->
@@ -40,8 +42,9 @@
                 </div>
                 <div class="modal-body">
                   <p>Total Number of Flights: {{ flight['num_flights'] }}</p>
-                  <p>Percentage of Flights Delayed: {{ flight['percent_delay'] }}</p>
+                  <p>Percentage of Flights Delayed: {{ '%0.2f' % flight['percent_delay'] }}%</p>
                   <p>Average Length of Delay in Minutes: {{ flight['avg_delay'] }}</p>
+                  <p>Percentage of Flights Cancelled or Diverted: {{ '%0.2f' % flight['percent_cancel_divert'] }}%
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -53,7 +56,7 @@
         </td>
         <!-- <td>{{ flight["score"]}}</td> -->
         <td>${{ flight["price"][3:] }}</td>
-        <td>{{ flight['carrier'][0][0] }}</td>
+        <td>{{ flight['carrier'][0] }}</td>
         <td>{{ flight['airline_code'] }} #{{ flight['flight_num'] }}</td>
         <td>{{ flight['origin_code'] }} - {{ origin }}</td>
         <td>{{ flight['destination_code'] }} - {{ destination }}</td>
@@ -66,17 +69,4 @@
 
 </div>
 </div>
-<br>
-
-<script type="text/javascript">
-    var sortBy = document.getElementById('sort');
-
-    // 
-    sortBy.onchange = function() {
-        alert(sortBy.value);
-
-        // $('flights').load('/sort-results?order=' + sortBy.value + "&results=" + {{ results }} );
-    }
-
-</script>
 {% endblock %}

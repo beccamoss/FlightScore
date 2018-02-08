@@ -113,130 +113,44 @@ AA4|Kachemak Bay, AK: Glacier Split
 AA5|Selby Lake, AK: Selby Lake Airport
 AA7|Independence Creek, AK: Independence Creek Airport
 AA8|Deadhorse, AK: Badami
-AAA|Anaa, French Polynesia: Anaa Airport
-AAB|Arrabury, Australia: Arrabury Station
-AAC|El Arish, Egypt: El Arish International
-AAD|Ad-Dabbah, Sudan: Ad-Dabbah Airport
-AAE|Annaba, Algeria: Rabah Bitat
 AAF|Apalachicola, FL: Apalachicola Regional Cleve Randolph Field
-AAH|Aachen, Germany: Aachen Merzbrueck
-AAI|Arraias, Brazil: Arraias Airport
-AAL|Aalborg, Denmark: Aalborg Airport
-AAM|Mala Mala, South Africa: Malamala
-AAN|Al Ain, United Arab Emirates: Al Ain International
-AAO|Anaco, Venezuela: Anaco Airport
-AAQ|Anapa, Russia: Anapa Airport
-AAR|Aarhus, Denmark: Aarhus Airport
-AAU|Asau, Samoa: Asau W Sam
-AAX|Araxa, Brazil: Araxa Airport
-ABA|Abakan, Russia: Abakan Airport
-ABD|Abadan, Iran: Abadan Airport
 ABE|Allentown/Bethlehem/Easton, PA: Lehigh Valley International
 ABI|Abilene, TX: Abilene Regional
-ABJ|Abidjan, Cote d'Ivoire: Felix Houphouet Boigny Abidjan International
-ABK|Kabri Dar, Ethiopia: Kebri Dahar
 ABL|Ambler, AK: Ambler River
 ABQ|Albuquerque, NM: Albuquerque International Sunport
 ABR|Aberdeen, SD: Aberdeen Regional
-ABS|Abu Simbel, Egypt: Abu Simbel Airport
-ABT|Al-Baha, Saudi Arabia: King Saud Bin Abdulaziz
-ABV|Abuja, Nigeria: Nnamdi Azikiwe International
-ABX|Albury, Australia: Albury Airport
 ABY|Albany, GA: Southwest Georgia Regional
-ABZ|Aberdeen, United Kingdom: Aberdeen Dyce
-ACA|Acapulco, Mexico: General Juan N Alvarez International
 ACB|Bellaire, MI: Antrim County
-ACC|Accra, Ghana: Accra Kotoka International
-ACE|Arrecife, Spain: Lanzarote
-ACH|Altenrhein, Switzerland: St Gallen Altenrhein
-ACI|Alderney, United Kingdom: Alderney Airport
 ACK|Nantucket, MA: Nantucket Memorial
 ACT|Waco, TX: Waco Regional
-ACU|Achutupo, Panama: Achutupo Airport
 ACV|Arcata/Eureka, CA: California Redwood Coast Humboldt County
 ACY|Atlantic City, NJ: Atlantic City International
-ADA|Adana, Turkey: Adana International
-ADB|Izmir, Turkey: Adnan Menderes
-ADC|Andakombe, Papua New Guinea: Andakombe Airport
-ADD|Addis Ababa, Ethiopia: Bole International
-ADE|Aden, Yemen: Aden International
-ADJ|Amman, Jordan: Marka International
 ADK|Adak Island, AK: Adak
-ADL|Adelaide, Australia: Adelaide International
-ADM|Ardmore, OK: Ardmore Municipal
-ADN|Andes, Colombia: Andes Airport
-ADO|Andamooka, Australia: Andamooka Airport
 ADQ|Kodiak, AK: Kodiak Airport
 ADS|Dallas, TX: Addison
 ADT|Ada, OK: Ada Regional
 ADW|Camp Springs, MD: Joint Base Andrews
-ADX|St Andrews, United Kingdom: RAF Leuchars
-ADZ|San Andres Island, Colombia: Gustavo Rojas Pinilla
-AE1|Liwa, United Arab Emirates: Liwa Airbase
-AE2|Sweihan, United Arab Emirates: Sweihan Airbase
 AED|Aleneva, AK: Aleneva Airport
-AEG|Padang Sidempuan, Indonesia: Aek Godang
-AEH|Abeche, Chad: Abeche Airport
-AEO|Aioun El Atrouss, Mauritania: Aioun El Atrouss Airport
-AEP|Buenos Aires, Argentina: Aeroparque Jorge Newbery
-AER|Adler/Sochi, Russia: Adler/Sochi Airport
-AES|Aalesund, Norway: Vigra
 AET|Allakaket, AK: Allakaket Airport
 AEX|Alexandria, LA: Alexandria International
-AEY|Akureyri, Iceland: Akureyri Airport
-AF1|Bagram, Afghanistan: Bagram Air Base
-AF2|Lashkar Gah, Afghanistan: Bastion Airfield
-AF3|Dwyer, Afghanistan: Dwyer Airport
-AF4|Shindand, Afghanistan: Shindand Airport
-AFA|San Rafael, Argentina: San Rafael Airport
 AFF|Colorado Springs, CO: USAF Academy Airfield
 AFK|Nebraska, NE: Nebraska City Municipal
 AFO|Afton, WY: Afton Municipal
 AFP|Wadesboro, NC: Anson County Jeff Cloud Field
-AFU|Doha, Qatar: Al Udeid Air Base
 AFW|Dallas/Fort Worth, TX: Fort Worth Alliance
-AFY|Afyon, Turkey: Afyon Airport
-AGA|Agadir, Morocco: Inezgane
-AGB|Augsburg, Germany: Augsburg Airport
 AGC|Pittsburgh, PA: Allegheny County
-AGF|Agen, France: Agen La Garenne
-AGG|Angoram, Papua New Guinea: Angoram Airport
-AGH|Angelholm/Helsingborg, Sweden: Angelholm
-AGK|Kagua, Papua New Guinea: Kagua Airport
-AGL|Wanigela, Papua New Guinea: Wanigela Airport
 AGN|Angoon, AK: Angoon Seaplane Base
-AGP|Malaga, Spain: Malaga Costa del Sol
-AGQ|Agrinion, Greece: Agrinion Airport
-AGR|Agra, India: Agra Airport
 AGS|Augusta, GA: Augusta Regional at Bush Field
-AGT|Ciudad del Este, Paraguay: Guarani International
-AGU|Aguascalientes, Mexico: Jesus Teran International
-AGV|Acarigua, Venezuela: Oswaldo Guevara Mujica
-AGX|Agatti Island, India: Agatti Island Airport
-AHA|Okinawa, Japan: Naha AB
-AHB|Abha, Saudi Arabia: Abha Airport
 AHD|Ardmore, OK: Ardmore Downtown Executive
 AHN|Athens, GA: Athens/Ben Epps
-AHO|Alghero/Sassari, Italy: Alghero Fertilia
-AHS|Ahuas, Honduras: Auas
 AHT|Amchitka Island, AK: Amchitka
-AHU|Al Hoceima, Morocco: Cherif El Idrissi International
 AIA|Alliance, NE: Alliance Municipal
 AIB|Anita Bay, AK: Anita Bay Airport
 AID|Anderson, IN: Anderson Municipal-Darlington Field
 AIK|Aiken, SC: Aiken Municipal
 AIN|Wainwright, AK: Wainwright Airport
-AIT|Aitutaki, Cook Islands: Aitutaki Airport
 AIY|Atlantic City, NJ: Bader Field
 AIZ|Lake of the Ozarks, MO: Lee C Fine Memorial
-AJA|Ajaccio, France: Ajaccio Napoleon Bonaparte
-AJF|Jouf, Saudi Arabia: Al Jouf
-AJJ|Akjoujt, Mauritania: Akjoujt Airport
-AJL|Aizwal, India: Lengpui
-AJN|Anjouan, Comoros: Ouani
-AJR|Arvidsjaur, Sweden: Arvidsjaur Airport
-AJU|Aracaju, Brazil: Santa Maria
-AJY|Agades, Niger: Mano Dayak
 AK1|Seward Peninsula, AK: Kelly Creek Airstrip
 AK2|Bear Fish Camp, AK: Bear Fish Camp Airport
 AK3|Fairbanks, AK: Gold King Creek
@@ -248,19 +162,11 @@ AK8|Zips, AK: Zips Airport
 AK9|Tolstoi Bay, AK: Tolstoi Bay Airport
 AKB|Atka, AK: Atka Airport
 AKC|Akron, OH: Akron Fulton International
-AKF|Kufrah, Libya: Kufra
-AKH|Al Kharj, Saudi Arabia: Prince Sultan AB
 AKI|Akiak, AK: Akiak Airport
-AKJ|Asahikawa, Japan: Asahikawa Airport
 AKK|Akhiok, AK: Akhiok Airport
-AKL|Auckland, New Zealand: Auckland International
 AKN|King Salmon, AK: King Salmon Airport
 AKO|Akron, CO: Colorado Plains Regional
 AKP|Anaktuvuk Pass, AK: Anaktuvuk Pass Airport
-AKR|Akure, Nigeria: Akure Airport
-AKS|Auki, Solomon Islands: Auki Airport
-AKT|Akrotiri, Cyprus: Akrotiri Airport
-AKX|Aktyubinsk, Kazakhstan: Aktyubinsk Airport
 AKY|Sittwe, Burma: Sittwe Airport
 AL1|Albertville, AL: Albertville Regional-Thomas J Brumlik Field
 AL2|Alabaster, AL: Shelby County
@@ -270,68 +176,29 @@ AL5|Demopolis, AL: Demopolis Regional
 AL6|Fairhope, AL: H. L. Sonny Callahan
 AL7|Jasper, AL: Walker County Bevill Field
 AL8|Scottsboro, AL: Scottsboro Municipal Word Field
-ALA|Almaty, Kazakhstan: Almaty Airport
 ALB|Albany, NY: Albany International
-ALC|Alicante, Spain: Alicante Elche
 ALE|Alpine, TX: Alpine Casparis Municipal
-ALF|Alta, Norway: Alta Airport
-ALG|Algiers, Algeria: Houari Boumediene
-ALH|Albany, Australia: Albany Airport
 ALI|Alice, TX: Alice International
-ALJ|Alexander Bay, South Africa: Alexander Bay Airport
-ALK|Asela, Ethiopia: Asela Airport
 ALM|Alamogordo, NM: Alamogordo White Sands Regional
 ALN|Alton, IL: St. Louis Regional
 ALO|Waterloo, IA: Waterloo Regional
-ALP|Aleppo, Syria: Aleppo International
-ALQ|Alegrete, Brazil: Alegrete Airport
-ALR|Alexandra, New Zealand: Alexandra Airport
 ALS|Alamosa, CO: San Luis Valley Regional/Bergman Field
-ALT|Alenquer, Brazil: Alenquer Airport
-ALU|Alula, Somalia: Alula Airport
 ALW|Walla Walla, WA: Walla Walla Regional
-ALX|Alexander City, AL: Thomas C. Russell Field
-ALY|Alexandria, Egypt: Alexandria International
 ALZ|Lazy Bay, AK: Alitak Seaplane Base
 AMA|Amarillo, TX: Rick Husband Amarillo International
-AMD|Ahmedabad, India: Ahmedabad Airport
-AMF|Ama, Papua New Guinea: Ama Airport
-AMG|Amboin, Papua New Guinea: Amboin Airport
-AMH|Arba Minch, Ethiopia: Arba Minch Airport
-AMI|Mataram, Indonesia: Selaparang
 AMK|Durango, CO: Animas Air Park
-AML|Puerto Armuelles, Panama: Puerto Armuelles Airport
-AMM|Amman, Jordan: Queen Alia International
 AMN|Alma, MI: Gratiot Community
-AMO|Mao, Chad: Mao Airport
-AMP|Ampanihy, Madagascar: Ampanihy Airport
-AMQ|Ambon, Indonesia: Pattimura
-AMS|Amsterdam, Netherlands: Schiphol
 AMW|Ames, IA: Ames Municipal
-AMX|Ammaroo, Australia: Ammaroo Station
-AMY|Ambatomainty, Madagascar: Ambatomainty Airport
 ANA|Anaheim, CA: Anaheim-Disneyland HP
 ANB|Anniston, AL: Anniston Regional
 ANC|Anchorage, AK: Ted Stevens Anchorage International
 AND|Anderson, SC: Anderson Regional
-ANE|Angers, France: Angers Marce
-ANF|Antofagasta, Chile: Andres Sabella International
-ANG|Angouleme, France: Angouleme Brie Champniers
 ANI|Aniak, AK: Aniak Airport
-ANK|Ankara, Turkey: Etimesgut
-ANM|Antalaha, Madagascar: Antsirabato
 ANN|Annette, AK: Annette Island
-ANO|Angoche, Mozambique: Angoche Airport
 ANP|Annapolis, MD: Lee
-ANR|Antwerp, Belgium: Deurne
-ANS|Andahuaylas, Peru: Andahuaylas Airport
 ANU|St. Johns, Antigua and Barbuda: V C Bird International
 ANV|Anvik, AK: Anvik Airport
-ANX|Andeness, Norway: Andoya
 AOH|Lima, OH: Lima Allen County
-AOI|Ancona, Italy: Ancona Falconara
-AOJ|Aomori, Japan: Aomori Airport
-AOK|Karpathos, Greece: Karpathos Airport
 AOL|Paso de Los Libres, Argentina: Paso de Los Libres Airport
 AOO|Altoona, PA: Altoona-Blair County
 AOR|Alor Setar, Malaysia: Sultan Abdul Halim
