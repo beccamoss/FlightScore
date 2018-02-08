@@ -136,6 +136,23 @@ def write_flight_data_to_file():
     f.close()
     return
 
+def get_scaled_delay(avg_min_delay):
+        """ Scaled the avgerage minute delay to a range between 0 and 1 """
+
+        if avg_min_delay < DELAY_THRESHOLD:
+            avg_delay = 0
+        elif avg_min_delay < 45:
+            avg_delay = .2
+        elif avg_min_delay < 60:
+            avg_delay = .4
+        elif avg_min_delay < 90:
+            avg_delay = .6
+        elif avg_min_delay < 120:
+            avg_delay = .8
+        else:
+            avg_delay = 1
+        return avg_delay    
+
 def calculate_flight_score():
     """ Evaluate each flight record and calculate a Flight Score which will be used
     in the FlightScore application.  This calculation is based on a weighted 
@@ -165,7 +182,8 @@ def calculate_flight_score():
                             flight_score = (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights)) + \
                                            (WEIGHT_CANCEL_DIVERT * flight_data.num_cancelled_diverted / float(flight_data.num_flights))
                         else:
-                            flight_score = (WEIGHT_AVG_MIN_DELAYED * flight_data.min_delay / float(flight_data.num_delay)) + \
+                            avg_delay = get_scaled_delay(flight_data.min_delay / float(flight_data.num_delay))
+                            flight_score = (WEIGHT_AVG_MIN_DELAYED * avg_delay) + \
                                            (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights)) + \
                                            (WEIGHT_CANCEL_DIVERT * flight_data.num_cancelled_diverted / float(flight_data.num_flights))
 
@@ -190,6 +208,8 @@ def calculate_flight_score():
                         raw_flight_data[k][j][m][n][o].score = new_score
                         
     return
+
+    
 
 raw_flight_data = makehash()
 load_flight_data()
