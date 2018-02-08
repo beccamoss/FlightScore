@@ -57,6 +57,7 @@ def get_flight_results(origin, destination, date):
     # flight_request = query_QPX(parameter)
     # python_result = QPX_results(flight_request)
 
+    # import pdb; pdb.set_trace()
     # write out results to file for reuse. Limited to 50 API calls/day
     # with open('test/flights.txt', 'w') as outfile:
     #     json.dump(python_result, outfile)
@@ -100,11 +101,12 @@ def parse_flight_results(python_result):
                 # import pdb; pdb.set_trace()
                 flight_info["score"] = flight.score
                 flight_info["avg_delay"] = flight.avg_delay
-                flight_info["percent_delay"] = flight.num_delayed / float(flight.num_flights)
+                flight_info["percent_delay"] = flight.num_delayed / float(flight.num_flights) * 100
                 flight_info["num_flights"] = flight.num_flights
+                flight_info["percent_cancel_divert"] = flight.num_cancel_divert / float(flight.num_flights) * 100
 
                 # Query the Carrier table to get the full name of the airline
-                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight.carrier)
+                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight.carrier).first()
 
                 # Append this dictionary to the flights list
                 flights.append(flight_info)
@@ -138,13 +140,20 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     else:
         time = REDEYE
 
-    flight = db.session.query(Flight).filter(Flight.carrier == carrier,
-                                            Flight.origin == origin,
-                                            Flight.destination == destination,
-                                            Flight.quarter == quarter,
-                                            Flight.time == time).first()
+    flight_info = db.session.query(Flight).filter(Flight.carrier == carrier,
+                                                  Flight.origin == origin,
+                                                  Flight.destination == destination,
+                                                  Flight.quarter == quarter,
+                                                  Flight.time == time).first()
 
-    return flight
+    # If matching flight record NOT found, ease query restrictions and try again
+    # using just origin, destination and time of day
+    if flight_info is None:
+        flight_info = db.session.query(Flight).filter(Flight.origin == origin,
+                                                      Flight.destination == destination,
+                                                      Flight.time == time).first()
+    
+    return flight_info
 
 def update_results_for_display(results):
     """ Update departure and arrival time, origin and destination fields and airline

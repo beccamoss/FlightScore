@@ -50,11 +50,6 @@ def search_flights():
                             origin=origin_description,
                             destination=destination_description)
 
-@app.route('/sort-results')
-def sort_results():
-
-    print request.args
-    return "hi"
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
