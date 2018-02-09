@@ -47,9 +47,9 @@ def get_flight_results(origin, destination, date):
             "origin": origin,
             "destination": destination,
             "date": date,
-            "maxStops": 1
+            "maxStops": 0
             }],
-        "solutions": 10
+        # "solutions": 10
         }
     }
 

@@ -142,15 +142,15 @@ def get_scaled_delay(avg_min_delay):
         if avg_min_delay < DELAY_THRESHOLD:
             avg_delay = 0
         elif avg_min_delay < 45:
-            avg_delay = .2
+            avg_delay = .05
         elif avg_min_delay < 60:
-            avg_delay = .4
+            avg_delay = .06
         elif avg_min_delay < 90:
-            avg_delay = .6
+            avg_delay = .13
         elif avg_min_delay < 120:
-            avg_delay = .8
+            avg_delay = .2
         else:
-            avg_delay = 1
+            avg_delay = .5
         return avg_delay    
 
 def calculate_flight_score():

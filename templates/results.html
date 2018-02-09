@@ -31,20 +31,20 @@
           <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>{{ '%0.4f' % flight["score"] }}</button>
         
             <!-- Modal -->
-          <!-- <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog"> -->
+          <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog">
             <div class="modal-dialog modal-sm">
             
               <!-- Modal content-->
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Flight Statistics</h4>
+                  <h4 class="modal-title">2017 Stats on Similar Flights</h4>
                 </div>
                 <div class="modal-body">
-                  <p>Total Number of Flights: {{ flight['num_flights'] }}</p>
-                  <p>Percentage of Flights Delayed: {{ '%0.2f' % flight['percent_delay'] }}%</p>
-                  <p>Average Length of Delay in Minutes: {{ flight['avg_delay'] }}</p>
-                  <p>Percentage of Flights Cancelled or Diverted: {{ '%0.2f' % flight['percent_cancel_divert'] }}%
+                  <p>Number of Flights: {{ flight['num_flights'] }}</p>
+                  <p>% Flights Delayed: {{ '%0.2f' % flight['percent_delay'] }}%</p>
+                  <p>Average Delay in Minutes: {{ flight['avg_delay'] }}</p>
+                  <p>% Flights Cancelled/Diverted: {{ '%0.2f' % flight['percent_cancel_divert'] }}%
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
