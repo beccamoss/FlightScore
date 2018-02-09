@@ -1,36 +1,43 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<div class="row">
+<div class="col-lg-8 col-lg-offset-4 col-med-8 col-med-offset-4 col-sm-8 col-sm-offset-2">
 <h1>FlightScore</h1> 
+<h3>Flight Search</h3>
 
+</div>
+</div>
+<br><br>
+<div class="row">
+<div class="col-lg-8 col-lg-offset-4 col-med-8 col-med-offset-4 col-sm-8 col-sm-offset-2">
 <form action="/search">
-    Origin:
-    <div>
-    <select name='origin'>
-        {% for airport in airports %}
-        <option value="{{airport.airport_id}}|{{ airport.description }}">
-            {{ airport.airport_id }}, {{ airport.description}}
-        </option>
+    <ul>
+        {% for message in get_flashed_messages() %}
+            <li>{{ message }}</li>
         {% endfor %}
-    </select>
+    </ul>
+    <label>Origin:</label>
+     <div class="ui-widget">
+        <label for="origin"></label>
+        <input name='origin' id="origin">
+    </div>   
+    <br><br>
+    <label>Destination:</label>
+    <div class="ui-widget">
+        <label for="destination"></label>
+        <input name='destination' id="destination">
+    </div>   
+
+    <div>
     </div>
     <br><br>
-    Destination:
-    <div>
-    <select name='destination'>
-        {% for airport in airports %}
-        <option value="{{airport.airport_id}}|{{ airport.description }}">
-            {{ airport.airport_id }}, {{ airport.description}}
-        </option>
-        {% endfor %}
-    </select>
-    </div>
-    <br><br>
-    Date:
+    <label>Date:</label>
     <div>
     <input id="date" name="date" type="date">
     </div>
     <br><br>
     <input type='submit' value='Search Flights'>
 </form>
+</div>
+</div>
 {% endblock %}

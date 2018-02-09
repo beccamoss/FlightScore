@@ -31,25 +31,32 @@ def index():
 def search_flights():
     
     # Get input from form
-    print request.args
-    origin, origin_description = request.args.get("origin").split('|')
-    destination, destination_description = request.args.get("destination").split('|')
-    date = request.args.get("date")
+    try:
+        # get the origin and destination airports, split them into airport code and description
+        origin, origin_description = request.args.get("origin").split(', ')
+        destination, destination_description = request.args.get("destination").split(', ')
+    
+        # make sure a valid date was entered
+        date = request.args.get("date")
+        if date == '':
+            flash("Please enter a valid date")
+            return render_template("home.html")
+
+        # use the user's input to search the Google Flight API for results
+        # in addition, also query the database to get the correcsponding FlightScore
+        results = get_flight_results(origin, destination, date)
+
+        # extract just the time of the flight arrival and departure
+        results = update_results_for_display(results)
 
 
-    # use the user's input to search the Google Flight API for results
-    # in addition, also query the database to get the correcsponding FlightScore
-    results = get_flight_results(origin, destination, date)
-
-    # extract just the time of the flight arrival and departure
-    results = update_results_for_display(results)
-
-
-    return render_template("results.html",
+        return render_template("results.html",
                             results=results,
                             origin=origin_description,
                             destination=destination_description)
-
+    except:
+        flash("Please enter a valid airport")
+        return render_template("home.html")
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
