@@ -28,3 +28,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+.btn {
+    width: 100px;
+}
