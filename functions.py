@@ -97,16 +97,26 @@ def parse_flight_results(python_result):
                                                      flight_info["destination_code"],
                                                      flight_info["departure_datetime"])
 
+                # If flight history in database is insufficient for prediction, set
+                # score to N/A
+                if flight == None or flight.num_flights < 10:
+                    flight_info['score'] = "N/A"
+                    flight_info["avg_delay"] = ''
+                    flight_info["percent_delay"] = ''
+                    flight_info["num_flights"] = ''
+                    flight_info["percent_cancel_divert"] = ''
+                else:
                 # Set more key-value pairs in the dictionary from this database query
                 # import pdb; pdb.set_trace()
-                flight_info["score"] = flight.score
-                flight_info["avg_delay"] = flight.avg_delay
-                flight_info["percent_delay"] = flight.num_delayed / float(flight.num_flights) * 100
-                flight_info["num_flights"] = flight.num_flights
-                flight_info["percent_cancel_divert"] = flight.num_cancel_divert / float(flight.num_flights) * 100
+                    flight_info["score"] = '%0.4f' % flight.score
+                    flight_info["avg_delay"] = flight.avg_delay
+                    flight_info["percent_delay"] = '%0.2f' % (flight.num_delayed / float(flight.num_flights) * 100)
+                    flight_info["num_flights"] = flight.num_flights
+                    flight_info["percent_cancel_divert"] = '%0.2f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
 
+                # import pdb; pdb.set_trace()
                 # Query the Carrier table to get the full name of the airline
-                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight.carrier).first()
+                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"]).first()
 
                 # Append this dictionary to the flights list
                 flights.append(flight_info)
@@ -148,10 +158,13 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
 
     # If matching flight record NOT found, ease query restrictions and try again
     # using just origin, destination and time of day
-    if flight_info is None:
-        flight_info = db.session.query(Flight).filter(Flight.origin == origin,
-                                                      Flight.destination == destination,
-                                                      Flight.time == time).first()
+    # import pdb; pdb.set_trace()
+
+    # if flight_info is None:
+    #     flight_info = db.session.query(Flight).filter(Flight.origin == origin,
+    #                                                   Flight.destination == destination,
+    #                                                   Flight.time == time,
+    #                                                   Flight.num_flights > 25).first()
     
     return flight_info
 
