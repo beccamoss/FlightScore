@@ -54,4 +54,3 @@
       source: availableAirports
     });
   } );
-

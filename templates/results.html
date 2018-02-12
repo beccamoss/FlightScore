@@ -24,42 +24,23 @@
     </tr>
 </thead>
 <tbody id="flights">
+   
     {% for flight in results %}
     <tr>
-        <td>
-          <!-- Trigger the modal with a button -->
-          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>
+        <td>          
+          <button data-flight-id="{{ flight['airline_code']+flight['flight_num'] }}" type="button" class="btn btn-info btn-lg flightstats">
             <meter value="{{ flight["score"] }}" min="0" max = "100" low = "30" high = "65" optimum = "85"></meter> {{ flight["score"] }}
-              
           </button>
-        
-            <!-- Modal -->
-          <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog">
-            <div class="modal-dialog modal-sm">
-            
-              <!-- Modal content-->
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">2017 Stats on Similar Flights</h4>
-                </div>
-                <div class="modal-body">
-                    <table>
-                      <tr><td>Number of Flights: </td><td style='padding-left:8px'>{{ flight['num_flights'] }}</td></tr>
-                      <tr><td>% Flights Delayed: </td><td style='padding-left:8px'>{{ flight['percent_delay'] }}%</td></tr>
-                      <tr><td>Average Delay in Minutes: </td><td style='padding-left:8px'>{{ flight['avg_delay'] }}</td></tr>
-                      <tr><td>% Flights Cancelled: </td><td style='padding-left:8px'>{{ flight['percent_cancel_divert'] }}%</td></tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-              
-            </div>
+          
+          <div id="div-{{ flight['airline_code']+flight['flight_num'] }}" style="display: none;">
+            <table style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+              <!-- <tr style="border-bottom: 1px solid #ddd"><td># Flights: </td><td style='padding-left:8px'>{{ flight['num_flights'] }}</td></tr> -->
+              <tr style="border-bottom: 1px solid #ddd"><td>% Delayed: </td><td style='padding-left:8px'>{{ flight['percent_delay'] }}%</td></tr>
+              <tr style="border-bottom: 1px solid #ddd"><td>Average Delay: </td><td style='padding-left:8px'>{{ flight['avg_delay'] }} min</td></tr>
+              <tr style="border-bottom: 1px solid #ddd"><td>% Cancelled: </td><td style='padding-left:8px'>{{ flight['percent_cancel_divert'] }}%</td></tr>
+            </table>
           </div>
         </td>
-        <!-- <td>{{ flight["score"]}}</td> -->
         <td>${{ flight["price"][3:] }}</td>
         <td>{{ flight['carrier'][0] }}</td>
         <td>{{ flight['airline_code'] }} #{{ flight['flight_num'] }}</td>
@@ -71,7 +52,12 @@
     {% endfor %}
 </tbody>
 </table>
-
+ <script>
+      $(".flightstats").click(function(evt) {
+          let flightId = $(this).data("flightId");
+          $('#div-'+ flightId).toggle();
+        });
+    </script>
 </div>
 </div>
 {% endblock %}
