@@ -54,8 +54,8 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    # flight_request = query_QPX(parameter)
-    # python_result = QPX_results(flight_request)
+    flight_request = query_QPX(parameter)
+    python_result = QPX_results(flight_request)
 
     # import pdb; pdb.set_trace()
     # write out results to file for reuse. Limited to 50 API calls/day
@@ -63,8 +63,8 @@ def get_flight_results(origin, destination, date):
     #     json.dump(python_result, outfile)
     
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    with open('test/flights.txt', 'r') as f:
-        python_result = json.load(f)
+    # with open('test/flights.txt', 'r') as f:
+    #     python_result = json.load(f)
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -106,9 +106,8 @@ def parse_flight_results(python_result):
                     flight_info["num_flights"] = ''
                     flight_info["percent_cancel_divert"] = ''
                 else:
-                # Set more key-value pairs in the dictionary from this database query
-                # import pdb; pdb.set_trace()
-                    flight_info["score"] = '%0.4f' % flight.score
+                    # Set more key-value pairs in the dictionary from this database query
+                    flight_info["score"] = flight.score
                     flight_info["avg_delay"] = flight.avg_delay
                     flight_info["percent_delay"] = '%0.2f' % (flight.num_delayed / float(flight.num_flights) * 100)
                     flight_info["num_flights"] = flight.num_flights
@@ -155,16 +154,6 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
                                                   Flight.destination == destination,
                                                   Flight.quarter == quarter,
                                                   Flight.time == time).first()
-
-    # If matching flight record NOT found, ease query restrictions and try again
-    # using just origin, destination and time of day
-    # import pdb; pdb.set_trace()
-
-    # if flight_info is None:
-    #     flight_info = db.session.query(Flight).filter(Flight.origin == origin,
-    #                                                   Flight.destination == destination,
-    #                                                   Flight.time == time,
-    #                                                   Flight.num_flights > 25).first()
     
     return flight_info
 

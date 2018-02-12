@@ -1,7 +1,6 @@
 import os
 import collections
 
-#files = ['raw/tenflights.csv']
 #files = ['test/test1.csv', 'test/test2.csv']
 files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
          'raw/april2017.csv', 'raw/may2017.csv', 'raw/june2017.csv',
@@ -9,9 +8,9 @@ files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
          'raw/october2017.csv', 'raw/november2017.csv', 'raw/december2016.csv']
 CANCELLED_OR_DIVERTED = -1
 DELAY_THRESHOLD = 30
-WEIGHT_PCT_FLIGHTS_DELAYED = 1
+WEIGHT_PCT_FLIGHTS_DELAYED = .8
 WEIGHT_AVG_MIN_DELAYED = .8
-WEIGHT_CANCEL_DIVERT = 1
+WEIGHT_CANCEL_DIVERT = 1.2
 
 def makehash():
     return collections.defaultdict(makehash)
@@ -110,7 +109,7 @@ def load_flight_data():
     return
 
 def write_flight_data_to_file():
-    """ Writes flights stats to a file """
+    """ Writes flights stats to a file that will be used in seed.py to seed the database """
 
     f = open("seed_data/flights.csv", "w")
 
@@ -186,18 +185,16 @@ def calculate_flight_score():
                             flight_score = (WEIGHT_AVG_MIN_DELAYED * avg_delay) + \
                                            (WEIGHT_PCT_FLIGHTS_DELAYED * flight_data.num_delay / float(flight_data.num_flights)) + \
                                            (WEIGHT_CANCEL_DIVERT * flight_data.num_cancelled_diverted / float(flight_data.num_flights))
-
+                        
                         raw_flight_data[k][j][m][n][o].score = flight_score
-                        # Track and update new min/max flight scores for normalization below
-                        if flight_score > max_flight_score:
-                            max_flight_score = flight_score
-                        elif flight_score < min_flight_score:
-                            min_flight_score = flight_score
-    
-    print "min: ", min_flight_score
-    print "max: ", max_flight_score
 
-    # Normalize Flight Score between 0-1
+                        # Track and update new min/max flight scores for normalization below
+                        if raw_flight_data[k][j][m][n][o].score > max_flight_score:
+                            max_flight_score = raw_flight_data[k][j][m][n][o].score
+                        elif raw_flight_data[k][j][m][n][o].score < min_flight_score:
+                            min_flight_score = raw_flight_data[k][j][m][n][o].score
+
+    # Normalize each Flight Score between 0-1
     for k in raw_flight_data:
         for j in raw_flight_data[k]:
             for m in raw_flight_data[k][j]:
@@ -205,13 +202,36 @@ def calculate_flight_score():
                     for o in raw_flight_data[k][j][m][n]:
                         flight_data = raw_flight_data[k][j][m][n][o]
                         new_score = (flight_data.score - min_flight_score) / (max_flight_score - min_flight_score)
-                        raw_flight_data[k][j][m][n][o].score = new_score
+                        raw_flight_data[k][j][m][n][o].score = int((1 - new_score) * 100)
+                        all_scores.append(raw_flight_data[k][j][m][n][o].score)
                         
     return
 
+def map_scores():
     
+    score_mapping = {}
+    new_score = 0
 
+    all_scores.sort(reverse=True)
+    flights_per_score = len(all_scores) / 100
+
+    for i in range(len(all_scores)):
+        if not score_mapping.get(all_scores[i]):
+            score_mapping[all_scores[i]] = 100 - (i / flights_per_score)
+    
+    for k in raw_flight_data:
+        for j in raw_flight_data[k]:
+            for m in raw_flight_data[k][j]:
+                for n in raw_flight_data[k][j][m]:
+                    for o in raw_flight_data[k][j][m][n]:
+                        old_score = raw_flight_data[k][j][m][n][o].score
+                        raw_flight_data[k][j][m][n][o].score = score_mapping[old_score]
+
+
+
+all_scores = []
 raw_flight_data = makehash()
 load_flight_data()
 calculate_flight_score()
+map_scores()
 write_flight_data_to_file() 
