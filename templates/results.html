@@ -13,7 +13,7 @@
 <table class="table table-striped sortable">
 <thead>
     <tr>
-        <th>Score</th>
+        <th>FlightScore</th>
         <th>Price</th>
         <th>Airline</th>
         <th class="sorttable_nosort">Flight</th>
@@ -29,7 +29,7 @@
         <td>
           <!-- Trigger the modal with a button -->
           <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>
-            <meter value="{{ flight["score"] }}" min="0" max = "100" low = "25" high = "80" optimum = "85"></meter> {{ flight["score"] }}
+            <meter value="{{ flight["score"] }}" min="0" max = "100" low = "30" high = "65" optimum = "85"></meter> {{ flight["score"] }}
               
           </button>
         
