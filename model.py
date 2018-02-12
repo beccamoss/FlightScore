@@ -22,7 +22,7 @@ class Flight(db.Model):
     num_cancel_divert = db.Column(db.Integer)
     duration = db.Column(db.Integer)
     avg_delay = db.Column(db.Integer)
-    score = db.Column(db.Float)
+    score = db.Column(db.Integer)
 
     def __repr__(self):
         """Provide helpful representation when printed."""

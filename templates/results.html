@@ -28,10 +28,13 @@
     <tr>
         <td>
           <!-- Trigger the modal with a button -->
-          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>{{ flight["score"] }}</button>
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target=#{{ flight['airline_code']+flight['flight_num'] }}>
+            <meter value="{{ flight["score"] }}" min="0" max = "100" low = "25" high = "80" optimum = "85"></meter> {{ flight["score"] }}
+              
+          </button>
         
             <!-- Modal -->
-          <!-- <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog"> -->
+          <div class="modal fade" id={{ flight['airline_code']+flight['flight_num'] }} role="dialog">
             <div class="modal-dialog modal-sm">
             
               <!-- Modal content-->
