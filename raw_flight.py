@@ -6,16 +6,19 @@ files = ['raw/january2017.csv', 'raw/february2017.csv', 'raw/march2017.csv',
          'raw/april2017.csv', 'raw/may2017.csv', 'raw/june2017.csv',
          'raw/july2017.csv', 'raw/august2017.csv', 'raw/september2017.csv',
          'raw/october2017.csv', 'raw/november2017.csv', 'raw/december2016.csv']
+all_scores = [] 
 CANCELLED_OR_DIVERTED = -1
 DELAY_THRESHOLD = 30
 WEIGHT_PCT_FLIGHTS_DELAYED = .8
 WEIGHT_AVG_MIN_DELAYED = .8
 WEIGHT_CANCEL_DIVERT = 1.2
+FLIGHTS_PER_SCORE = 56635
 
 def makehash():
     return collections.defaultdict(makehash)
 
 class FlightInfo(object):
+    """ A class object to hold all the data for a flight segment """
 
     def __init__(self, min_delay, duration):
         """ Create and initialize a new flight object and add to the nested 
@@ -49,12 +52,6 @@ class FlightInfo(object):
             self.num_cancelled_diverted += 1
         self.duration += duration
         self.num_flights += 1
-
-    def add_or_update_flight_score(self, score):
-        """ Add calculated flight score to raw_flight_data object """
-
-        self.score = score
-        return
 
 
 def load_flight_data():
@@ -136,7 +133,8 @@ def write_flight_data_to_file():
     return
 
 def get_scaled_delay(avg_min_delay):
-        """ Scaled the avgerage minute delay to a range between 0 and 1 """
+        """ Scaled the avgerage minute delay to a range between 0 and 1 that
+        improves the FlightScore calculation """
 
         if avg_min_delay < DELAY_THRESHOLD:
             avg_delay = 0
@@ -200,38 +198,44 @@ def calculate_flight_score():
             for m in raw_flight_data[k][j]:
                 for n in raw_flight_data[k][j][m]:
                     for o in raw_flight_data[k][j][m][n]:
+                        # calculate normalized value
                         flight_data = raw_flight_data[k][j][m][n][o]
                         new_score = (flight_data.score - min_flight_score) / (max_flight_score - min_flight_score)
+                        # Convert decimals to whole ints and reverse the order
+                        # so large scores reflect better flights
                         raw_flight_data[k][j][m][n][o].score = int((1 - new_score) * 100)
-                        all_scores.append(raw_flight_data[k][j][m][n][o].score)
+                        # add scores to a list for later mapping in map_scores()
+                        all_scores.append([raw_flight_data[k][j][m][n][o].score, 
+                                           raw_flight_data[k][j][m][n][o].num_flights,
+                                           k, j, m, n, o])
                         
     return
 
 def map_scores():
+    """ This function evenly spreads all flight segments across scores from 1-100
+    Note that this doesn't take into account the volume of flights in each segment """
     
     score_mapping = {}
-    new_score = 0
+    total_flights = 0
 
+    # sort list of lists containing scores, origin, destination, carrier, quarter
+    # and date from high to low by score
     all_scores.sort(reverse=True)
-    flights_per_score = len(all_scores) / 100
 
+    # Assigns a new score spreading all flights evening across all scores
     for i in range(len(all_scores)):
-        if not score_mapping.get(all_scores[i]):
-            score_mapping[all_scores[i]] = 100 - (i / flights_per_score)
-    
-    for k in raw_flight_data:
-        for j in raw_flight_data[k]:
-            for m in raw_flight_data[k][j]:
-                for n in raw_flight_data[k][j][m]:
-                    for o in raw_flight_data[k][j][m][n]:
-                        old_score = raw_flight_data[k][j][m][n][o].score
-                        raw_flight_data[k][j][m][n][o].score = score_mapping[old_score]
+        k = all_scores[i][2]
+        j = all_scores[i][3]
+        m = all_scores[i][4]
+        n = all_scores[i][5]
+        o = all_scores[i][6]
+        total_flights = total_flights + all_scores[i][1]    
+        raw_flight_data[k][j][m][n][o].score = 100 - (total_flights / FLIGHTS_PER_SCORE)
 
 
-
-all_scores = []
-raw_flight_data = makehash()
-load_flight_data()
-calculate_flight_score()
-map_scores()
-write_flight_data_to_file() 
+if __name__ == "__main__":
+    raw_flight_data = makehash()
+    load_flight_data()
+    calculate_flight_score()
+    map_scores()
+    write_flight_data_to_file() 

@@ -7,7 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 MORNING = 1
 AFTERNOON = 2
 EVENING = 3
-REDEYE = 4
 
 def query_QPX(parameter):
     """Send query with parameter and url to QPX"""  
@@ -76,6 +75,7 @@ def parse_flight_results(python_result):
     dictinary and append it to a list of flights."""
 
     flights = []
+    import pdb; pdb.set_trace()
     for j in range(len(python_result["trips"]["tripOption"])):
         for flight_slice in python_result["trips"]["tripOption"][j]["slice"]:
             for flight_segment in flight_slice["segment"]:
@@ -99,7 +99,7 @@ def parse_flight_results(python_result):
 
                 # If flight history in database is insufficient for prediction, set
                 # score to N/A
-                if flight == None or flight.num_flights < 10:
+                if flight == None or flight.num_flights < 5:
                     flight_info['score'] = "N/A"
                     flight_info["avg_delay"] = ''
                     flight_info["percent_delay"] = ''
