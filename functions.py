@@ -53,8 +53,8 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    flight_request = query_QPX(parameter)
-    python_result = QPX_results(flight_request)
+    # flight_request = query_QPX(parameter)
+    # python_result = QPX_results(flight_request)
 
     # import pdb; pdb.set_trace()
     # write out results to file for reuse. Limited to 50 API calls/day
@@ -62,8 +62,8 @@ def get_flight_results(origin, destination, date):
     #     json.dump(python_result, outfile)
     
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    # with open('test/flights.txt', 'r') as f:
-    #     python_result = json.load(f)
+    with open('test/flights.txt', 'r') as f:
+        python_result = json.load(f)
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -75,7 +75,6 @@ def parse_flight_results(python_result):
     dictinary and append it to a list of flights."""
 
     flights = []
-    import pdb; pdb.set_trace()
     for j in range(len(python_result["trips"]["tripOption"])):
         for flight_slice in python_result["trips"]["tripOption"][j]["slice"]:
             for flight_segment in flight_slice["segment"]:
