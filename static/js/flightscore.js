@@ -44,7 +44,8 @@
       "CLE, Cleveland OH",
       "PIT, Pittsburgh PA",
       "CMH, Columbus OH",
-      "OGG, Kahului HI"
+      "OGG, Kahului HI",
+      "TUS, Tucson AZ"
     ];
 
     $( "#origin" ).autocomplete({
