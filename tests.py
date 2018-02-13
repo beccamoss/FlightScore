@@ -40,7 +40,7 @@ class FlaskTestsDatabase(TestCase):
 
         # Make mock of Google Flights API call
         def _mock_flight_results(parameter):
-            return functions.flight_results_from_file()
+            return functions.flight_results_from_file('seed_data/testflights.txt')
 
         functions.flight_results = _mock_flight_results
 
@@ -67,7 +67,7 @@ class FlaskTestsDatabase(TestCase):
         """ Test FlightScore DB lookup"""
 
         result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21")
-        self.assertIn("70", result.data)
+        self.assertIn('<meter value="70"', result.data)
 
 
 if __name__ == '__main__':
