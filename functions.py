@@ -1,7 +1,7 @@
 import urllib2
 import json
 import os
-from model import Flight, Carrier, Airport, connect_to_db, db
+from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
 MORNING = 1
@@ -53,22 +53,37 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    # flight_request = query_QPX(parameter)
-    # python_result = QPX_results(flight_request)
-
-    # import pdb; pdb.set_trace()
-    # write out results to file for reuse. Limited to 50 API calls/day
-    # with open('test/flights.txt', 'w') as outfile:
-    #     json.dump(python_result, outfile)
+    python_result = flight_results(parameter)
     
+    # write out results to file for reuse. Limited to 50 API calls/day
+    # write_flight_results_to_files()
+
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    with open('test/flights.txt', 'r') as f:
-        python_result = json.load(f)
+    # python_result = flight_results_from_file()
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
 
     return flights
+
+def flight_results(parameter):
+    """ Call Google Flights API """
+
+    flight_request = query_QPX(parameter)
+    return QPX_results(flight_request)
+
+def flight_results_from_file():
+    """ read in test data instead of calling API.  Limited to 50 API calls/day """
+
+    with open('test/flights.txt', 'r') as f:
+        python_result = json.load(f)
+    return python_result
+
+def write_flight_results_to_files():
+    """ Write Google Flights search results to file to prevent overuse of API """
+
+    with open('test/flights.txt', 'w') as outfile:
+        json.dump(python_result, outfile)
 
 def parse_flight_results(python_result):
     """ take the API search result and parse it.  Put the relevant info into a flight_info
@@ -166,21 +181,3 @@ def update_results_for_display(results):
         flight["departure_datetime"] = flight["departure_datetime"][11:16]
 
     return results
-            
-def print_flight_results(python_result):
-    """ display function for debugging purposes """
-
-    flights = parse_flight_results(python_result)
-
-    for flight in flights:
-        print "Airline: ", flight["airline_code"]
-        print "Flight Number: ", flight["flight_num"]
-        print "Origin: ", flight["origin_code"]
-        print "Destination: ", flight["destination_code"]
-        print "Departure: ", flight["departure_datetime"]
-        print "Arrival: ", flight ["arrival_datetime"]
-        print "Duration: ", flight["duration"]
-        print "Price: ", flight["price"]
-        print
-
-    return

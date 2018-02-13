@@ -12,8 +12,8 @@ class Flight(db.Model):
     __tablename__ = "flights"
 
     flight_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    origin = db.Column(db.String(3), db.ForeignKey('airports.airport_id'))
-    destination = db.Column(db.String(3), db.ForeignKey('airports.airport_id'))
+    origin = db.Column(db.String(3))
+    destination = db.Column(db.String(3))
     carrier = db.Column(db.String(3), db.ForeignKey('carriers.carrier_id'))
     quarter = db.Column(db.Integer)
     time = db.Column(db.Integer)
@@ -31,19 +31,20 @@ class Flight(db.Model):
                 format(self.num_flights, self.num_delayed,
                        self.duration, self.avg_delay)
 
-class Airport(db.Model):
-    """ Data on airports """
 
-    __tablename__ = 'airports'
+# class Airport(db.Model):
+#     """ Data on airports """
 
-    airport_id = db.Column(db.String(3), primary_key=True)
-    description = db.Column(db.String(128))
+#     __tablename__ = 'airports'
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+#     airport_id = db.Column(db.String(3), primary_key=True)
+#     description = db.Column(db.String(128))
 
-        return ("<airport_id={} description={}>".format(self.airport_id,
-                                                                  self.description))
+#     def __repr__(self):
+#         """Provide helpful representation when printed."""
+
+#         return ("<airport_id={} description={}>".format(self.airport_id,
+#                                                                   self.description))
 
 
 class Carrier(db.Model):
@@ -65,14 +66,32 @@ class Carrier(db.Model):
 ##############################################################################
 # Helper functions
 
-def connect_to_db(app):
+def connect_to_db(app, database='postgresql:///flights'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///flights'
+    app.config['SQLALCHEMY_DATABASE_URI'] = database
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+
+def example_data():
+    """ Create some sample data for database tests """
+
+    c1 = Carrier(carrier_id="AS", name="Alaska Airlines")
+    c2 = Carrier(carrier_id="UA", name="United Airlines")
+    db.session.add_all([c1, c2])
+    db.session.commit()
+   
+    f1 = Flight(origin="SEA", destination="SFO", carrier="AS", quarter=2, time=2,
+                num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120,
+                avg_delay=40, score=65)
+    f2 = Flight(origin="ORD", destination="DFW", carrier="UA", quarter=2, time=2,
+                num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110,
+                avg_delay=35, score=70)
+ 
+    db.session.add_all([f1, f2])
+    db.session.commit()
 
 
 if __name__ == "__main__":

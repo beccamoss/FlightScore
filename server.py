@@ -7,7 +7,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask import (Flask, render_template, redirect, request, flash,
                    session)
 
-from model import Flight, Carrier, Airport, connect_to_db, db
+from model import Flight, Carrier, connect_to_db, db
 from functions import get_flight_results, update_results_for_display
 
 app = Flask(__name__)
@@ -24,8 +24,11 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    airports = Airport.query.all()
-    return render_template("home.html", airports=airports)
+    return render_template("home.html")
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
 
 @app.route('/search')
 def search_flights():
