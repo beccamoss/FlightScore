@@ -78,18 +78,14 @@ def connect_to_db(app, database='postgresql:///flights'):
 def example_data():
     """ Create some sample data for database tests """
 
-    c1 = Carrier(carrier_id="AS", name="Alaska Airlines")
+    c1 = Carrier(carrier_id="NK", name="Spirit Airlines")
     c2 = Carrier(carrier_id="UA", name="United Airlines")
     db.session.add_all([c1, c2])
     db.session.commit()
-   
-    f1 = Flight(origin="SEA", destination="SFO", carrier="AS", quarter=2, time=2,
-                num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120,
-                avg_delay=40, score=65)
-    f2 = Flight(origin="ORD", destination="DFW", carrier="UA", quarter=2, time=2,
-                num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110,
-                avg_delay=35, score=70)
- 
+  
+    f1 = Flight(origin="SEA", destination="SFO", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
+    f2 = Flight(origin="ORD", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
+
     db.session.add_all([f1, f2])
     db.session.commit()
 

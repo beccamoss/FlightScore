@@ -53,13 +53,13 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    python_result = flight_results(parameter)
+    # python_result = flight_results(parameter)
     
     # write out results to file for reuse. Limited to 50 API calls/day
     # write_flight_results_to_files()
 
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    # python_result = flight_results_from_file()
+    python_result = flight_results_from_file('seed_data/flights.txt')
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -68,21 +68,21 @@ def get_flight_results(origin, destination, date):
 
 def flight_results(parameter):
     """ Call Google Flights API """
-
+    import pdb; pdb.set_trace()
     flight_request = query_QPX(parameter)
     return QPX_results(flight_request)
 
-def flight_results_from_file():
+def flight_results_from_file(filename):
     """ read in test data instead of calling API.  Limited to 50 API calls/day """
 
-    with open('test/flights.txt', 'r') as f:
+    with open(filename, 'r') as f:
         python_result = json.load(f)
     return python_result
 
 def write_flight_results_to_files():
     """ Write Google Flights search results to file to prevent overuse of API """
 
-    with open('test/flights.txt', 'w') as outfile:
+    with open('seed_data/flights.txt', 'w') as outfile:
         json.dump(python_result, outfile)
 
 def parse_flight_results(python_result):
@@ -104,6 +104,9 @@ def parse_flight_results(python_result):
                 flight_info["departure_datetime"] = flight_segment["leg"][0]["departureTime"]
                 flight_info["arrival_datetime"] = flight_segment["leg"][0]["arrivalTime"]
                 flight_info["duration"] = flight_segment["leg"][0]["duration"]
+
+                # Query the Carrier table to get the full name of the airline
+                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"]).first()
 
                 # Get the past history flight data and score for matching flight from db
                 flight = get_matching_flight_from_db(flight_info["airline_code"],
@@ -128,8 +131,7 @@ def parse_flight_results(python_result):
                     flight_info["percent_cancel_divert"] = '%0.2f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
 
                 # import pdb; pdb.set_trace()
-                # Query the Carrier table to get the full name of the airline
-                flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"]).first()
+                
 
                 # Append this dictionary to the flights list
                 flights.append(flight_info)
