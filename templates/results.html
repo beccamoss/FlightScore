@@ -28,16 +28,21 @@
     {% for flight in results %}
     <tr>
         <td>          
-          <button data-flight-id="{{ flight['airline_code']+flight['flight_num'] }}" type="button" class="btn btn-info btn-lg flightstats">
+          <button data-flight-id="{{ flight['airline_code']+flight['flight_num'] }}" data-origin-code= "{{ flight['origin_code'] }}" data-dest-code="{{ flight['destination_code'] }}" data-depart="{{ flight['departure_datetime'] }}" type="button" class="btn btn-info btn-lg flightstats">
             <meter value="{{ flight["score"] }}" min="0" max = "100" low = "30" high = "65" optimum = "85"></meter> {{ flight["score"] }}
           </button>
           
           <div id="div-{{ flight['airline_code']+flight['flight_num'] }}" style="display: none;">
             <table style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-              <!-- <tr style="border-bottom: 1px solid #ddd"><td># Flights: </td><td style='padding-left:8px'>{{ flight['num_flights'] }}</td></tr> -->
-              <tr style="border-bottom: 1px solid #ddd"><td>Delayed: </td><td style='padding-left:8px'>{{ flight['percent_delay'] }}%</td></tr>
-              <tr style="border-bottom: 1px solid #ddd"><td>Average Delay: </td><td style='padding-left:8px'>{{ flight['avg_delay'] }} min</td></tr>
-              <tr style="border-bottom: 1px solid #ddd"><td>Cancelled: </td><td style='padding-left:8px'>{{ flight['percent_cancel_divert'] }}%</td></tr>
+              <tr style="border-bottom: 1px solid #ddd">
+                <td>Delayed: </td><td id="pd-{{ flight['airline_code']+flight['flight_num'] }}"style='padding-left:8px'></td>
+              </tr>
+              <tr style="border-bottom: 1px solid #ddd">
+                <td>Average Delay: </td><td id="ad-{{ flight['airline_code']+flight['flight_num'] }}" style='padding-left:8px'></td>
+              </tr>
+              <tr style="border-bottom: 1px solid #ddd">
+                <td>Cancelled: </td><td id="pc-{{ flight['airline_code']+flight['flight_num'] }}" style='padding-left:8px'></td>
+              </tr>
             </table>
           </div>
         </td>
@@ -46,18 +51,40 @@
         <td>{{ flight['airline_code'] }} #{{ flight['flight_num'] }}</td>
         <td>{{ flight['origin_code'] }} - {{ origin }}</td>
         <td>{{ flight['destination_code'] }} - {{ destination }}</td>
-        <td>{{ flight['departure_datetime'] }}</td>
-        <td>{{ flight['arrival_datetime'] }}</td>
+        <td>{{ flight['departure_datetime'][11:16] }}</td>
+        <td>{{ flight['arrival_datetime'][11:16] }}</td>
     </tr>
     {% endfor %}
 </tbody>
 </table>
  <script>
-      $(".flightstats").click(function(evt) {
+      function toggleView() {
+          // Data about the flight is stored in data fields on the button which was 
+          // clicked, so let's first extract these values and pass them to requestStats
+          // if view is visible
           let flightId = $(this).data("flightId");
+          let origin = $(this).data("originCode");
+          let destination = $(this).data("destCode");
+          let depart = $(this).data("depart");
+
+          // Toggle the view of stats 
           $('#div-'+ flightId).toggle();
-        });
-    </script>
+          
+          // Get stats if div is visible!
+          if ($('#div-'+ flightId).is(':visible'))
+            $.get("/getstats", {flightId: flightId, origin: origin, destination: destination, depart: depart}, addStats);
+      }
+      
+      function addStats(results) {
+          // Get the stats out of the JSON returned from the server and add them
+          // to the HTML in the appropriate place
+          $('#pd-' + results['flightId']).html(results['pctDelay'] + "%");
+          $('#ad-' + results['flightId']).html(results['avgDelay'] + " min");
+          $('#pc-' + results['flightId']).html(results['pctCancel'] + "%");
+      }
+
+      $(".flightstats").on('click', toggleView);
+  </script>
 </div>
 </div>
 {% endblock %}
