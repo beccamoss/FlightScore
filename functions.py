@@ -108,35 +108,59 @@ def parse_flight_results(python_result):
                 # Query the Carrier table to get the full name of the airline
                 flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"]).first()
 
-                # Get the past history flight data and score for matching flight from db
-                flight = get_matching_flight_from_db(flight_info["airline_code"],
-                                                     flight_info["origin_code"],
-                                                     flight_info["destination_code"],
-                                                     flight_info["departure_datetime"])
-
-                # If flight history in database is insufficient for prediction, set
-                # score to N/A
-                if flight == None or flight.num_flights < 5:
-                    flight_info['score'] = "N/A"
-                    flight_info["avg_delay"] = ''
-                    flight_info["percent_delay"] = ''
-                    flight_info["num_flights"] = ''
-                    flight_info["percent_cancel_divert"] = ''
-                else:
-                    # Set more key-value pairs in the dictionary from this database query
-                    flight_info["score"] = flight.score
-                    flight_info["avg_delay"] = flight.avg_delay
-                    flight_info["percent_delay"] = '%0.2f' % (flight.num_delayed / float(flight.num_flights) * 100)
-                    flight_info["num_flights"] = flight.num_flights
-                    flight_info["percent_cancel_divert"] = '%0.2f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
-
-                # import pdb; pdb.set_trace()
-                
+                # Get score for flight
+                flight_info["score"] = get_score_for_flight(flight_info["airline_code"],
+                                                            flight_info["origin_code"],
+                                                            flight_info["destination_code"],
+                                                            flight_info["departure_datetime"])
 
                 # Append this dictionary to the flights list
                 flights.append(flight_info)
 
     return flights
+
+def get_score_for_flight(airline_code, origin_code, destination_code, departure_datetime):
+    
+    # Get the past history flight data and score for matching flight from db
+    flight = get_matching_flight_from_db(airline_code,
+                                         origin_code,
+                                         destination_code,
+                                         departure_datetime)
+
+    # If flight history in database is insufficient for prediction, set
+    # score to N/A
+    if flight == None or flight.num_flights < 5:
+        return "N/A"
+    return flight.score
+
+
+def get_info_from_flight(airline_code, origin_code, destination_code, departure_datetime):
+    """ This function is called from an AJAX request to get stats for the selected flight """
+
+    flight_info = {}
+
+    # Get the past history flight data and score for matching flight from db
+    flight = get_matching_flight_from_db(airline_code,
+                                         origin_code,
+                                         destination_code,
+                                         departure_datetime)
+
+    # If flight history in database is insufficient for prediction, set
+    # score to N/A
+    if flight == None or flight.num_flights < 5:
+        flight_info["avg_delay"] = ''
+        flight_info["percent_delay"] = ''
+        flight_info["num_flights"] = ''
+        flight_info["percent_cancel_divert"] = ''
+    else:
+        # Set more key-value pairs in the dictionary from this database query
+        flight_info["avg_delay"] = flight.avg_delay
+        flight_info["percent_delay"] = '%0.2f' % (flight.num_delayed / float(flight.num_flights) * 100)
+        flight_info["num_flights"] = flight.num_flights
+        flight_info["percent_cancel_divert"] = '%0.2f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
+
+    return flight_info
+
 
 def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     """ given a flight search result, query the database to get the

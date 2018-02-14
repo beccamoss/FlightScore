@@ -5,10 +5,10 @@ from jinja2 import StrictUndefined
 from flask_debugtoolbar import DebugToolbarExtension
 
 from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+                   session, jsonify)
 
 from model import Flight, Carrier, connect_to_db, db
-from functions import get_flight_results, update_results_for_display
+from functions import get_flight_results, get_info_from_flight, update_results_for_display
 
 app = Flask(__name__)
 
@@ -32,7 +32,10 @@ def about():
 
 @app.route('/search')
 def search_flights():
-   
+    """ This route makes sure the input from the search form is valid, and if so,
+    uses the Google Flights API to get flight results back for the search and renders
+    them in results.html """
+
     # Get input from form
     try:
         # get the origin and destination airports, split them into airport code and description
@@ -49,18 +52,33 @@ def search_flights():
         return render_template("home.html")
 
     # use the user's input to search the Google Flight API for results
-    # in addition, also query the database to get the correcsponding FlightScore
     results = get_flight_results(origin, destination, date)
 
-    # extract just the time of the flight arrival and departure
-    results = update_results_for_display(results)
-
-
     return render_template("results.html",
-                        results=results,
-                        origin=origin_description,
-                        destination=destination_description)
-   
+                           results=results,
+                           origin=origin_description,
+                           destination=destination_description)
+
+@app.route('/getstats')
+def get_stats():
+    """ This route completes an AJAX request to get the stats associated with the FlightScore 
+    information on the flight is stored as data on the button, so this data is
+    passed in and used for our database lookup in get_info_from_flight() """
+
+    # Get flight information from parameters
+    flight_id = request.args.get("flightId")
+    origin = request.args.get("origin")
+    destination = request.args.get("destination")
+    depart = request.args.get("depart")
+
+    # Get the FlightScore stats from our database
+    flight_info = get_info_from_flight(flight_id[:2], origin, destination, depart)
+
+    # Build our dictionary of values to pass back to the client.  Then jsonify it!
+    flight = {"flightId": flight_id, "pctDelay": flight_info["percent_delay"], "avgDelay": flight_info["avg_delay"], "pctCancel": flight_info["percent_cancel_divert"]}
+
+    return jsonify(flight)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
