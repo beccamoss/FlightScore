@@ -31,22 +31,6 @@ class Flight(db.Model):
                 format(self.num_flights, self.num_delayed,
                        self.duration, self.avg_delay)
 
-
-# class Airport(db.Model):
-#     """ Data on airports """
-
-#     __tablename__ = 'airports'
-
-#     airport_id = db.Column(db.String(3), primary_key=True)
-#     description = db.Column(db.String(128))
-
-#     def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#         return ("<airport_id={} description={}>".format(self.airport_id,
-#                                                                   self.description))
-
-
 class Carrier(db.Model):
     """ Data on airline carriers """
 

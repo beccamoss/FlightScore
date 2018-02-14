@@ -8,7 +8,7 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session, jsonify)
 
 from model import Flight, Carrier, connect_to_db, db
-from functions import get_flight_results, get_info_from_flight, update_results_for_display
+from functions import (get_flight_results, get_info_from_flight, date_valid)
 
 app = Flask(__name__)
 
@@ -42,12 +42,13 @@ def search_flights():
         origin, origin_description = request.args.get("origin").split(', ')
         destination, destination_description = request.args.get("destination").split(', ')
     except:
+        # Todo - should also check if user entered same airport for origin/dest
         flash("Please enter a valid airport")
         return render_template("home.html")  
 
     # make sure a valid date was entered
     date = request.args.get("date")
-    if date == '':
+    if not date_valid(date):
         flash("Please enter a valid date")
         return render_template("home.html")
 
@@ -62,7 +63,7 @@ def search_flights():
 @app.route('/getstats')
 def get_stats():
     """ This route completes an AJAX request to get the stats associated with the FlightScore 
-    information on the flight is stored as data on the button, so this data is
+    Information on the flight is stored as data on the button, so this data is
     passed in and used for our database lookup in get_info_from_flight() """
 
     # Get flight information from parameters
@@ -72,7 +73,8 @@ def get_stats():
     depart = request.args.get("depart")
 
     # Get the FlightScore stats from our database
-    flight_info = get_info_from_flight(flight_id[:2], origin, destination, depart)
+    airline = flight_id[:2]
+    flight_info = get_info_from_flight(airline, origin, destination, depart)
 
     # Build our dictionary of values to pass back to the client.  Then jsonify it!
     flight = {"flightId": flight_id, "pctDelay": flight_info["percent_delay"], "avgDelay": flight_info["avg_delay"], "pctCancel": flight_info["percent_cancel_divert"]}
