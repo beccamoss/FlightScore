@@ -26,25 +26,6 @@ def load_flights():
     db.session.commit()
     return
 
-# def load_airports():
-#     for row in open("seed_data/airports.txt"):
-#         row = row.strip()
-#         code, description = row.split("|")
-
-#         # just keep the city and state in the description
-#         index = description.find(':')
-#         if index > 0:
-#             description = description[:index]
-
-#         airport = Airport(airport_id=code, description=description)
-
-#         # Add each airport to the session
-#         db.session.add(airport)
-
-#     # Once we're done, commit all the airports to the database
-#     db.session.commit()
-#     return
-
 def load_carriers():
     for row in open("seed_data/carriers.txt"):
         row = row.strip()

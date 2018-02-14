@@ -3,6 +3,7 @@ import json
 import os
 from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 MORNING = 1
 AFTERNOON = 2
@@ -53,13 +54,13 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    # python_result = flight_results(parameter)
+    python_result = flight_results(parameter)
     
     # write out results to file for reuse. Limited to 50 API calls/day
     # write_flight_results_to_files()
 
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    python_result = flight_results_from_file('seed_data/flights.txt')
+    # python_result = flight_results_from_file('seed_data/flights.txt')
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -120,6 +121,7 @@ def parse_flight_results(python_result):
     return flights
 
 def get_score_for_flight(airline_code, origin_code, destination_code, departure_datetime):
+    """ Look up the score for the flight with similar characteristics. Return the score """
     
     # Get the past history flight data and score for matching flight from db
     flight = get_matching_flight_from_db(airline_code,
@@ -135,7 +137,8 @@ def get_score_for_flight(airline_code, origin_code, destination_code, departure_
 
 
 def get_info_from_flight(airline_code, origin_code, destination_code, departure_datetime):
-    """ This function is called from an AJAX request to get stats for the selected flight """
+    """ This function is called from an AJAX request to get stats for the 
+    selected FlightScore """
 
     flight_info = {}
 
@@ -155,9 +158,9 @@ def get_info_from_flight(airline_code, origin_code, destination_code, departure_
     else:
         # Set more key-value pairs in the dictionary from this database query
         flight_info["avg_delay"] = flight.avg_delay
-        flight_info["percent_delay"] = '%0.2f' % (flight.num_delayed / float(flight.num_flights) * 100)
+        flight_info["percent_delay"] = '%0.1f' % (flight.num_delayed / float(flight.num_flights) * 100)
         flight_info["num_flights"] = flight.num_flights
-        flight_info["percent_cancel_divert"] = '%0.2f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
+        flight_info["percent_cancel_divert"] = '%0.1f' % (flight.num_cancel_divert / float(flight.num_flights) * 100)
 
     return flight_info
 
@@ -197,13 +200,22 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     
     return flight_info
 
-def update_results_for_display(results):
-    """ Update departure and arrival time, origin and destination fields and airline
-    info for display purpose on results.html 
-    """
+def date_valid(date):
+    """ Check if date entered is valid.  If it's in the past or not in the current
+    year, or empty, return false """
 
-    for flight in results:
-        flight["arrival_datetime"] = flight["arrival_datetime"][11:16]
-        flight["departure_datetime"] = flight["departure_datetime"][11:16]
+    today = datetime.now()
 
-    return results
+    try:
+        month = int(date[5:7])
+        day = int(date[8:])
+        year = int(date[:4])
+        
+        if year > today.year:
+            return False
+        elif (month < today.month) or ((month == today.month) and (day < today.day)):
+            return False
+        else:
+            return True
+    except: 
+        return False
