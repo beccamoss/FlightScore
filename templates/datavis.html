@@ -82,10 +82,13 @@ group.append("path")
   var groupText = group.append("text")
       .attr("x", 6)
       .attr("dy", 15);
-debugger;
+  
+  let airports = {{ airports|safe }};
+  //console.log({{airports}});
+
   groupText.append("textPath")
       .attr("xlink:href", function(d, i) { return "#group" + i; })
-      .text(function(d, i) { return "{{ airports[1] }}"; });
+      .text(function(d, i) { return airports[i]; });
 
 var groupTick = group.selectAll(".group-tick")
   .data(function(d) { return groupTicks(d, 1e3); })
