@@ -8,6 +8,8 @@ from datetime import datetime
 MORNING = 1
 AFTERNOON = 2
 EVENING = 3
+REDEYE = 4
+
 
 def query_QPX(parameter):
     """Send query with parameter and url to QPX"""  

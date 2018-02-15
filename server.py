@@ -9,6 +9,8 @@ from flask import (Flask, render_template, redirect, request, flash,
 
 from model import Flight, Carrier, connect_to_db, db
 from functions import (get_flight_results, get_info_from_flight, date_valid)
+                       
+from datavis import get_data_for_vis, airports
 
 app = Flask(__name__)
 
@@ -80,6 +82,13 @@ def get_stats():
     flight = {"flightId": flight_id, "pctDelay": flight_info["percent_delay"], "avgDelay": flight_info["avg_delay"], "pctCancel": flight_info["percent_cancel_divert"]}
 
     return jsonify(flight)
+
+@app.route('/datavis')
+def data_vis():
+
+    matrix = get_data_for_vis()
+
+    return render_template("datavis.html", vol_flights=matrix, airports=airports)
 
 
 if __name__ == "__main__":
