@@ -10,7 +10,8 @@ from flask_sqlalchemy import SQLAlchemy
 #             "DAL", "STL", "AUS", "OAK", "MSY", "MCI", "SNA", "SMF", "SJU", "SAT",
 #             "IND", "CLE", "PIT", "CMH", "OGG", "TUS"]
 
-airports = ["SEA", "SFO", "SJC", "LAX"]
+airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA",
+            "PHX", "MIA", "MCO", "IAH", "EWR", "MSP", "BOS", "DTW", "PHL", "LGA"]
 
 def get_data_for_vis():
 
