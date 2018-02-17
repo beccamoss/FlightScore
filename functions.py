@@ -56,13 +56,13 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    python_result = flight_results(parameter)
+    # python_result = flight_results(parameter)
     
     # write out results to file for reuse. Limited to 50 API calls/day
-    # write_flight_results_to_files()
+    # write_flight_results_to_files(python_result)
 
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    # python_result = flight_results_from_file('seed_data/flights.txt')
+    python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -82,10 +82,10 @@ def flight_results_from_file(filename):
         python_result = json.load(f)
     return python_result
 
-def write_flight_results_to_files():
+def write_flight_results_to_files(python_result):
     """ Write Google Flights search results to file to prevent overuse of API """
 
-    with open('seed_data/flights.txt', 'w') as outfile:
+    with open('seed_data/demoflightsearch.txt', 'w') as outfile:
         json.dump(python_result, outfile)
 
 def parse_flight_results(python_result):
@@ -93,6 +93,7 @@ def parse_flight_results(python_result):
     dictinary and append it to a list of flights."""
 
     flights = []
+
     for j in range(len(python_result["trips"]["tripOption"])):
         for flight_slice in python_result["trips"]["tripOption"][j]["slice"]:
             for flight_segment in flight_slice["segment"]:
@@ -116,7 +117,7 @@ def parse_flight_results(python_result):
                                                             flight_info["origin_code"],
                                                             flight_info["destination_code"],
                                                             flight_info["departure_datetime"])
-
+                
                 # Append this dictionary to the flights list
                 flights.append(flight_info)
 

@@ -3,129 +3,125 @@
 <div class="row">
 <div class="col-lg-8 col-lg-offset-2 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
 <h1>FlightScore</h1> 
-<h3>2017 Flight Volume Between 20 Busiest US Airports</h3>
+<h3>2017 Flight Volume Between 10 Busiest US Airports</h3>
 </div>
 </div>
-<br><br>
-<style>
-
-body {
-  font: 10px sans-serif;
-}
-
-.group-tick line {
-  stroke: #000;
-}
-
-.ribbons {
-  fill-opacity: 0.67;
-}
-
-</style>
 <div class="row">
-<div class="col-lg-8 col-lg-offset-2 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
-<svg width="700" height="700"></svg>
+<div class="col-lg-8 col-lg-offset-1 col-med-8 col-med-offset-1 col-sm-8 col-sm-offset-1">
+<div id="chart"></div>
 </div>
 </div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-
-// var matrix = [
-//   [11975,  5871, 8916, 2868],
-//   [ 1951, 10048, 2060, 6171],
-//   [ 8010, 16145, 8090, 8045],
-//   [ 1013,   990,  940, 6907]
-// ];
-
 var matrix = {{ vol_flights }};
+    ////////////////////////////////////////////////////////////
+    //////////////////////// Set-Up ////////////////////////////
+    ////////////////////////////////////////////////////////////
+    var margin = {left:10, top:10, right:10, bottom:10},
+      width =  750, // more flexibility: Math.min(window.innerWidth, 1000)
+      height =  750, // same: Math.min(window.innerWidth, 1000)
+      innerRadius = Math.min(width, height) * .39,
+      outerRadius = innerRadius * 1.1;
 
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height"),
-    outerRadius = Math.min(width, height) * 0.5 - 40,
-    innerRadius = outerRadius - 30;
+    var names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"],
+      colors = ["#301E1E", "#083E77", "#342350", "#567235", "#8B161C", 
+                "#DF7C00", "#669999", "#F26223", "ac7339", "b8b894"],
+      opacityDefault = 0.8;
+      
+    ////////////////////////////////////////////////////////////
+    /////////// Create scale and layout functions //////////////
+    ////////////////////////////////////////////////////////////
 
-var formatValue = d3.formatPrefix(",.0", 1e3);
+    var colors = d3.scaleOrdinal()
+        .domain(d3.range(names.length))
+      .range(colors);
 
-var chord = d3.chord()
-    .padAngle(0.05)
-    .sortSubgroups(d3.descending);
+    var chord = d3.chord()
+      .padAngle(.02)
+      .sortChords(d3.descending)
 
-var arc = d3.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius);
+      var arc = d3.arc()
+      .innerRadius(innerRadius*1.01)
+      .outerRadius(outerRadius);
 
-var ribbon = d3.ribbon()
+    var path = d3.ribbon()
     .radius(innerRadius);
 
-var color = d3.scaleOrdinal()
-    .domain(d3.range({{ airports|length }}))
-    .range(["#8cd9b3", "#FFDD89", "#957244", "#F26223", "0088cc",
-            "#6699ff", "#bb99ff", "#ff8080", "#ff944d", "33ccff",
-            "#ff3333", "#ffff33", "#ff1a1a", "#ffa500", "aaaa55",
-            "#006600", "#cccc00", "#ff3385", "#bf8040", "ac39ac"]);
-
-var g = svg.append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+  ////////////////////////////////////////////////////////////
+  ////////////////////// Create SVG //////////////////////////
+  ////////////////////////////////////////////////////////////
+  
+  var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + (width/2 + margin.left) + "," + (height/2 + margin.top) + ")")
     .datum(chord(matrix));
 
-var group = g.append("g")
-    .attr("class", "groups")
-    .selectAll("g")
-    .data(function(chords) { return chords.groups; })
-    .enter().append("g");
+  ////////////////////////////////////////////////////////////
+  ////////////////// Draw outer Arcs /////////////////////////
+  ////////////////////////////////////////////////////////////
 
-group.append("path")
-    .style("fill", function(d) { return color(d.index); })
-    .style("stroke", function(d) { return d3.rgb(color(d.index)).darker(); })
-    .attr("id", function(d, i) { return "group" + i; })
+  var outerArcs = svg.selectAll("g.group")
+    .data(function(chords) { return chords.groups; })
+    .enter().append("g")
+    .attr("class", "group")
+    .on("mouseover", fade(.1))
+    .on("mouseout", fade(opacityDefault))
+
+  ////////////////////////////////////////////////////////////
+  ////////////////////// Append names ////////////////////////
+  ////////////////////////////////////////////////////////////
+
+  //Append the label names INSIDE outside
+  outerArcs.append("path")
+    .style("fill", function(d) { return colors(d.index); })
+    .attr("id", function(d, i) { return "group" + d.index; })
     .attr("d", arc);
 
-// Add a text label.
-  var groupText = group.append("text")
-      .attr("x", 6)
-      .attr("dy", 15);
-  
-  let airports = {{ airports|safe }};
+   outerArcs.append("text")
+           .attr("x", 6)
+           .attr("dy", 18)
+           .append("textPath")
+           .attr("href", function(d) { return "#group" + d.index;})
+           .text(function(chords, i){return names[i];})
+           .style("fill", "white");
 
-  groupText.append("textPath")
-      .attr("xlink:href", function(d, i) { return "#group" + i; })
-      .text(function(d, i) { return airports[i]; });
+// Add a mouseover title.
+  outerArcs.append("title").text(function(d, i) {
+    var sumFlights = 0;
+    for (j=0; j<matrix.length; j++) {
+        sumFlights += matrix[i][j];
+    }
+    return sumFlights.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " Flights";
+  });
 
-// var groupTick = group.selectAll(".group-tick")
-//   .data(function(d) { return groupTicks(d, 1e3); })
-//   .enter().append("g")
-//     .attr("class", "group-tick")
-//     .attr("transform", function(d) { return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)"; });
+  ////////////////////////////////////////////////////////////
+  ////////////////// Draw inner chords ///////////////////////
+  ////////////////////////////////////////////////////////////
 
-// groupTick.append("line")
-//     .attr("x2", 6);
+  svg.selectAll("path.chord")
+    .data(function(chords) { return chords; })
+    .enter().append("path")
+    .attr("class", "chord")
+    .style("fill", function(d) { return colors(d.source.index); })
+    .style("opacity", opacityDefault)
+    .attr("d", path);
 
-// groupTick
-//   .filter(function(d) { return d.value % 5e3 === 0; })
-//   .append("text")
-//     .attr("x", 8)
-//     .attr("dy", ".35em")
-//     .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
-//     .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-//     .text(function(d) { return formatValue(d.value); });
 
-g.append("g")
-    .attr("class", "ribbons")
-  .selectAll("path")
-  .data(function(chords) { return chords; })
-  .enter().append("path")
-    .attr("d", ribbon)
-    .style("fill", function(d) { return color(d.target.index); })
-    .style("stroke", function(d) { return d3.rgb(color(d.target.index)).darker(); });
+  ////////////////////////////////////////////////////////////
+  ////////////////// Extra Functions /////////////////////////
+  ////////////////////////////////////////////////////////////
 
-// // Returns an array of tick angles and values for a given group and step.
-// function groupTicks(d, step) {
-//   var k = (d.endAngle - d.startAngle) / d.value;
-//   return d3.range(0, d.value, step).map(function(value) {
-//     return {value: value, angle: value * k + d.startAngle};
-//   });
-// }
+  //Returns an event handler for fading a given chord group.
+  function fade(opacity) {
+    return function(d,i) {
+      svg.selectAll("path.chord")
+          .filter(function(d) { return d.source.index != i && d.target.index != i; })
+      .transition()
+          .style("opacity", opacity);
+    };
+  }//fade
 
 </script>
 {% endblock %}
