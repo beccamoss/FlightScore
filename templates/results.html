@@ -33,17 +33,11 @@
           </button>
           
           <div id="div-{{ flight['airline_code']+flight['flight_num'] }}" style="display: none;">
-            <table style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-              <tr style="border-bottom: 1px solid #ddd">
-                <td>Delayed: </td><td id="pd-{{ flight['airline_code']+flight['flight_num'] }}"style='padding-left:8px'></td>
-              </tr>
-              <tr style="border-bottom: 1px solid #ddd">
-                <td>Average Delay: </td><td id="ad-{{ flight['airline_code']+flight['flight_num'] }}" style='padding-left:8px'></td>
-              </tr>
-              <tr style="border-bottom: 1px solid #ddd">
-                <td>Cancelled: </td><td id="pc-{{ flight['airline_code']+flight['flight_num'] }}" style='padding-left:8px'></td>
-              </tr>
-            </table>
+            <ul style="padding-top: 20px">
+              <li id="pd-{{ flight['airline_code']+flight['flight_num'] }}"></li>
+              <li id="ad-{{ flight['airline_code']+flight['flight_num'] }}"></li>
+              <li id="pc-{{ flight['airline_code']+flight['flight_num'] }}"></li>
+            </ul>
           </div>
         </td>
         <td>${{ flight["price"][3:] }}</td>
@@ -78,9 +72,9 @@
       function addStats(results) {
           // Get the stats out of the JSON returned from the server and add them
           // to the HTML in the appropriate place
-          $('#pd-' + results['flightId']).html(results['pctDelay'] + "%");
-          $('#ad-' + results['flightId']).html(results['avgDelay'] + " min");
-          $('#pc-' + results['flightId']).html(results['pctCancel'] + "%");
+          $('#pd-' + results['flightId']).html("Delayed: " + results['pctDelay'] + "%");
+          $('#ad-' + results['flightId']).html("Avg Delay: " + results['avgDelay'] + " min");
+          $('#pc-' + results['flightId']).html("Pct Cancel: " + results['pctCancel'] + "%");
       }
 
       $(".flightstats").on('click', toggleView);

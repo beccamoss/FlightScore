@@ -55,7 +55,11 @@ def search_flights():
         return render_template("home.html")
 
     # use the user's input to search the Google Flight API for results
-    results = get_flight_results(origin, destination, date)
+    try:
+        results = get_flight_results(origin, destination, date)
+    except:
+        flash("No results returned from API")
+        return render_template("home.html")
 
     return render_template("results.html",
                            results=results,

@@ -4,14 +4,8 @@ import os
 from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
-# airports = ["SEA", "SFO", "SJC", "PDX", "LAX", "SAN", "ATL", "ORD", "DFW", "JFK",
-#             "DEN", "LAS", "CLT", "PHX", "MIA", "MCO", "IAH", "EWR", "MSP", "BOS",
-#             "DTW", "PHL", "LGA", "FLL", "BWI", "DCA", "SLC", "MDW", "HNL", "TPA",
-#             "DAL", "STL", "AUS", "OAK", "MSY", "MCI", "SNA", "SMF", "SJU", "SAT",
-#             "IND", "CLE", "PIT", "CMH", "OGG", "TUS"]
-
-airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA",
-            "PHX", "MIA", "MCO", "IAH", "EWR", "MSP", "BOS", "DTW", "PHL", "LGA"]
+# 10 Busiest airports
+airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"]
 
 def get_data_for_vis():
 
