@@ -100,18 +100,46 @@ var matrix = {{ vol_flights }};
   ////////////////// Draw inner chords ///////////////////////
   ////////////////////////////////////////////////////////////
 
-  svg.selectAll("path.chord")
+  innerChords = svg.selectAll("path.chord")
     .data(function(chords) { return chords; })
     .enter().append("path")
     .attr("class", "chord")
     .style("fill", function(d) { return colors(d.source.index); })
     .style("opacity", opacityDefault)
-    .attr("d", path);
+    .attr("d", path)
+    .on("mouseover", mouseoverChord)
+    .on("mouseout", mouseoutChord);
 
+    // Add a mouseover title.
+  innerChords.append("title").text(function(d, i) {
+  
+    return "Origin: " + names[d.source.index] + ": " + d.source.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ", Origin: " + names[d.target.index]  + ": " + d.target.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  });
 
   ////////////////////////////////////////////////////////////
   ////////////////// Extra Functions /////////////////////////
   ////////////////////////////////////////////////////////////
+  //Highlight hovered over chord
+  function mouseoverChord(d,i) {
+
+    //Decrease opacity to all
+    svg.selectAll("path.chord")
+      .transition()
+      .style("opacity", 0.1);
+    //Show hovered over chord with full opacity
+    d3.select(this)
+      .transition()
+          .style("opacity", 1);
+    // debugger;
+  }
+  //Bring all chords back to default opacity
+  function mouseoutChord(d) {
+    //Set opacity back to default for all
+    svg.selectAll("path.chord")
+      .transition()
+      .style("opacity", opacityDefault);
+    }      //function mouseoutChord
+
 
   //Returns an event handler for fading a given chord group.
   function fade(opacity) {
