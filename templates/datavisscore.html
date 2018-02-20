@@ -3,7 +3,7 @@
 <div class="row">
 <div class="col-lg-8 col-lg-offset-2 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
 <h1>FlightScore</h1> 
-<h3>2017 Flight Volume Between 10 Busiest US Airports</h3>
+<h3>2017 Average FlightScore Between Airports</h3>
 </div>
 </div>
 <div class="row">
@@ -13,7 +13,9 @@
 </div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-var matrix = {{ vol_flights }};
+var num_flights = {{ vol_flights }};
+var score = {{ score }};
+
     ////////////////////////////////////////////////////////////
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
@@ -25,7 +27,7 @@ var matrix = {{ vol_flights }};
 
     var colors = ["#301E1E", "#083E77", "#342350", "#567235", "#8B161C", 
                   "#DF7C00", "#669999", "#F26223", "ac7339", "b8b894"],
-        names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"],
+        names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"],
         opacityDefault = 0.8;
       
     ////////////////////////////////////////////////////////////
@@ -56,7 +58,7 @@ var matrix = {{ vol_flights }};
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + (width/2 + margin.left) + "," + (height/2 + margin.top) + ")")
-    .datum(chord(matrix));
+    .datum(chord(score));
 
   ////////////////////////////////////////////////////////////
   ////////////////// Draw outer Arcs /////////////////////////
@@ -89,11 +91,14 @@ var matrix = {{ vol_flights }};
 
 // Add a mouseover title.
   outerArcs.append("title").text(function(d, i) {
+    var weightedScores = 0;
     var sumFlights = 0;
-    for (j=0; j<matrix.length; j++) {
-        sumFlights += matrix[i][j];
+    //debugger;
+    for (j=0; j<num_flights.length; j++) {
+        weightedScores += (score[i][j] * num_flights[i][j]);
+        sumFlights += num_flights[i][j];
     }
-    return sumFlights.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " Flights";
+    return (weightedScores / sumFlights).toFixed(0) + ": Average FlightScore";
   });
 
   ////////////////////////////////////////////////////////////
@@ -113,7 +118,7 @@ var matrix = {{ vol_flights }};
     // Add a mouseover title.
   innerChords.append("title").text(function(d, i) {
   
-    return "Origin " + names[d.source.index] + ": " + d.source.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "\nOrigin " + names[d.target.index]  + ": " + d.target.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return d.source.value.toFixed(0) + " FlightScore from  " + names[d.source.index]+ "\n" + d.target.value.toFixed(0) + " FlightScore From " + names[d.target.index];
   });
 
   ////////////////////////////////////////////////////////////
