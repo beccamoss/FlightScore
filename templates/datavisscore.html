@@ -86,19 +86,25 @@ var score = {{ score }};
            .attr("dy", 18)
            .append("textPath")
            .attr("href", function(d) { return "#group" + d.index;})
-           .text(function(chords, i){return names[i];})
+           .text(function(chords, i){
+              var weightedScores = sumFlights = num_legs = 0;
+              for (j=0; j<num_flights.length; j++) {
+                  weightedScores += (score[i][j] + score[j][i]);
+                  if (score[i][j] != 0)
+                    num_legs += 2
+              }
+              return names[i] + ": " + (weightedScores / num_legs).toFixed(0);})
            .style("fill", "white");
 
 // Add a mouseover title.
   outerArcs.append("title").text(function(d, i) {
-    var weightedScores = 0;
-    var sumFlights = 0;
-    //debugger;
+    var weightedScores = sumFlights = num_legs = 0;
     for (j=0; j<num_flights.length; j++) {
-        weightedScores += (score[i][j] * num_flights[i][j]);
-        sumFlights += num_flights[i][j];
+        weightedScores += (score[i][j] + score[j][i]);
+        if (score[i][j] != 0)
+          num_legs += 2
     }
-    return (weightedScores / sumFlights).toFixed(0) + ": Average FlightScore";
+    return (weightedScores / num_legs).toFixed(0) + ": Average FlightScore";
   });
 
   ////////////////////////////////////////////////////////////
