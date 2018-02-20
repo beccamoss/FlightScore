@@ -56,13 +56,13 @@ def get_flight_results(origin, destination, date):
     }
 
     # Query the Google Flights Api
-    # python_result = flight_results(parameter)
+    python_result = flight_results(parameter)
     
     # write out results to file for reuse. Limited to 50 API calls/day
     # write_flight_results_to_files(python_result)
 
     # read in test data instead of calling API.  Limited to 50 API calls/day
-    python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
+    # python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
 
     # Take the result and parse to just get the information we need
     flights = parse_flight_results(python_result)
@@ -134,7 +134,8 @@ def get_score_for_flight(airline_code, origin_code, destination_code, departure_
 
     # If flight history in database is insufficient for prediction, set
     # score to N/A
-    if flight == None or flight.num_flights < 5:
+    # if flight == None or flight.num_flights < 5:
+    if flight == None:
         return "N/A"
     return flight.score
 
@@ -153,7 +154,9 @@ def get_info_from_flight(airline_code, origin_code, destination_code, departure_
 
     # If flight history in database is insufficient for prediction, set
     # score to N/A
-    if flight == None or flight.num_flights < 5:
+    # if flight == None or flight.num_flights < 5:  
+
+    if flight == None:
         flight_info["avg_delay"] = ''
         flight_info["percent_delay"] = ''
         flight_info["num_flights"] = ''
@@ -200,8 +203,30 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
                                                   Flight.destination == destination,
                                                   Flight.quarter == quarter,
                                                   Flight.time == time).first()
-    
+
+    # If no results returned, try querying again with a code share
+    if not flight_info:
+        carrier = get_code_share(carrier)
+        flight_info = db.session.query(Flight).filter(Flight.carrier == carrier,
+                                                      Flight.origin == origin,
+                                                      Flight.destination == destination,
+                                                      Flight.quarter == quarter,
+                                                      Flight.time == time).first()
     return flight_info
+
+def get_code_share(carrier):
+
+    if carrier == "UA":
+        return "OO"
+    elif carrier == "OO":
+        return "UA"
+    elif carrier == "AK":
+        return "VX"
+    elif carrier == "VX":
+        return "AK"
+    else:
+        return carrier
+
 
 def date_valid(date):
     """ Check if date entered is valid.  If it's in the past or not in the current
