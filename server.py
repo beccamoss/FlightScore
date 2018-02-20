@@ -10,7 +10,7 @@ from flask import (Flask, render_template, redirect, request, flash,
 from model import Flight, Carrier, connect_to_db, db
 from functions import (get_flight_results, get_info_from_flight, date_valid)
                        
-from datavis import get_data_for_vis, airports
+from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY)
 
 app = Flask(__name__)
 
@@ -89,10 +89,40 @@ def get_stats():
 
 @app.route('/datavis')
 def data_vis():
+    """ This route gets the volume of all flights between selected cities from the
+    database and puts them into a matrix format which will be the input for our D3
+    data visualization of airport traffic """
 
-    matrix = get_data_for_vis()
+    matrix = get_data_for_vis(VOL)
 
-    return render_template("datavis.html", vol_flights=matrix, airports=airports)
+    return render_template("datavis.html", vol_flights=matrix)
+
+@app.route('/datavispctdelay')
+def data_vis_pct_delay():
+    """ This route gets both the volume of all flights, and the number of flights 
+    delayed between selected airports.  From these results, we then created a 3rd
+    matrix containing the percentage of flights delayed between each selected airport.
+    This new matrix is then passed to datavispctdelay.html as input for the D3 chord
+    chart visualization.  We also pass in vol_flights so we can display overall stats
+    for each airport """
+
+    matrix = get_data_for_vis(VOL)
+    matrix2 = get_data_for_vis(NUM_DELAY)
+    matrix3 = get_pct_delay(matrix, matrix2)
+
+    return render_template("datavispctdelay.html", vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3)
+
+@app.route('/datavisavgdelay')
+def data_vis_avg_delay():
+    """ This route gets both the number of delayed flights between each airport, but
+    also calculates a weighted average of delayed flights between each city.  these
+    two matrices are then passed along to datavisavgdelay.html for display in a D3
+    chord chart """
+    
+    matrix = get_data_for_vis(AVG_DELAY)
+    matrix2 = get_data_for_vis(NUM_DELAY)
+    return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2)
+
 
 
 if __name__ == "__main__":
