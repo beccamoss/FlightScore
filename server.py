@@ -10,7 +10,7 @@ from flask import (Flask, render_template, redirect, request, flash,
 from model import Flight, Carrier, connect_to_db, db
 from functions import (get_flight_results, get_info_from_flight, date_valid)
                        
-from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY)
+from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE)
 
 app = Flask(__name__)
 
@@ -118,12 +118,21 @@ def data_vis_avg_delay():
     also calculates a weighted average of delayed flights between each city.  these
     two matrices are then passed along to datavisavgdelay.html for display in a D3
     chord chart """
-    
+
     matrix = get_data_for_vis(AVG_DELAY)
     matrix2 = get_data_for_vis(NUM_DELAY)
     return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2)
 
-
+@app.route('/datavisscore')
+def data_vis_score():
+    """ This route gets both the number of delayed flights between each airport, but
+    also calculates a weighted average of delayed flights between each city.  these
+    two matrices are then passed along to datavisavgdelay.html for display in a D3
+    chord chart """
+    
+    matrix = get_data_for_vis(SCORE)
+    matrix2 = get_data_for_vis(NUM_DELAY)
+    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

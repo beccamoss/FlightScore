@@ -9,6 +9,7 @@ airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"
 VOL = 1
 NUM_DELAY = 2
 AVG_DELAY = 3
+SCORE = 4
 
 def get_data_for_vis(data_type):
     """ 
@@ -47,6 +48,9 @@ def get_data_for_vis(data_type):
                 elif data_type == AVG_DELAY:
                     avg_flights_1 = avg_flights_1 + (flights_1[k].avg_delay * flights_1[k].num_delayed)
                     total_flights_1 = total_flights_1 + flights_1[k].num_delayed
+                elif data_type == SCORE:
+                    avg_flights_1 = avg_flights_1 + (flights_1[k].score * flights_1[k].num_flights)
+                    total_flights_1 = total_flights_1 + flights_1[k].num_flights
 
             # Total stats for the other direction
             for k in range(len(flights_2)):
@@ -57,9 +61,12 @@ def get_data_for_vis(data_type):
                 elif data_type == AVG_DELAY:
                     avg_flights_2 = avg_flights_2 + (flights_2[k].avg_delay * flights_2[k].num_delayed)
                     total_flights_2 = total_flights_2 + flights_2[k].num_delayed
+                elif data_type == SCORE:
+                    avg_flights_2 = avg_flights_2 + (flights_2[k].score * flights_2[k].num_flights)
+                    total_flights_2 = total_flights_2 + flights_2[k].num_flights
 
-            # Get weighted average of delays
-            if data_type == AVG_DELAY:
+            # Get weighted average of delays or FlightScores
+            if (data_type == AVG_DELAY) or (data_type == SCORE):
                 if total_flights_1 != 0:
                     total_flights_1 = avg_flights_1 / total_flights_1
                 if total_flights_2 != 0:
