@@ -5,16 +5,30 @@ from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
 # 10 Busiest airports
-airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"]
+airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"]
+VOL = 1
+NUM_DELAY = 2
+AVG_DELAY = 3
 
-def get_data_for_vis():
+def get_data_for_vis(data_type):
+    """ 
+    This function take data_type as a parameter to distinguish what type of information
+    is required from the database to visualize.  This can be:
+        VOL = Volume of total flights between each airports
+        NUM_DELAY = Total number of flights delayed over 30 minutes between each airports
+        AVG_DELAY = A weighted average of the minutes delayed between each airport
 
-    total_flights_1 = 0
-    total_flights_2 = 0
+    Query the database between each airport twice - once for each directions
+    Calculate the totals for each flight in that flight segment
+    Calculate the weighted average if necessary
+    Append to matrix which will eventually be passed to D3 for display in chord chart 
+    """
+
+    total_flights_1 = total_flights_2 = avg_flights_1 = avg_flights_2 = 0
     matrix = [[] for _ in xrange(len(airports))]    
 
     for i in range(len(airports)-1):
-        matrix[i].append(0) 
+        matrix[i].append(0)
         for j in range(i+1, len(airports)):
 
             # Query the database for flight stats in both directions
@@ -24,17 +38,57 @@ def get_data_for_vis():
             flights_2 = db.session.query(Flight).filter(Flight.origin == airports[j],
                                                         Flight.destination == airports[i]).all()
 
+            # Total up stats for all flight segments going both directions
             for k in range(len(flights_1)):
-                total_flights_1 = total_flights_1 + flights_1[k].num_flights
+                if data_type == VOL:
+                    total_flights_1 = total_flights_1 + flights_1[k].num_flights
+                elif data_type == NUM_DELAY:
+                    total_flights_1 = total_flights_1 + flights_1[k].num_delayed
+                elif data_type == AVG_DELAY:
+                    avg_flights_1 = avg_flights_1 + (flights_1[k].avg_delay * flights_1[k].num_delayed)
+                    total_flights_1 = total_flights_1 + flights_1[k].num_delayed
 
+            # Total stats for the other direction
             for k in range(len(flights_2)):
-                total_flights_2 = total_flights_2 + flights_2[k].num_flights
+                if data_type == VOL:
+                    total_flights_2 = total_flights_2 + flights_2[k].num_flights
+                elif data_type == NUM_DELAY:
+                    total_flights_2 = total_flights_2 + flights_2[k].num_delayed
+                elif data_type == AVG_DELAY:
+                    avg_flights_2 = avg_flights_2 + (flights_2[k].avg_delay * flights_2[k].num_delayed)
+                    total_flights_2 = total_flights_2 + flights_2[k].num_delayed
 
+            # Get weighted average of delays
+            if data_type == AVG_DELAY:
+                if total_flights_1 != 0:
+                    total_flights_1 = avg_flights_1 / total_flights_1
+                if total_flights_2 != 0:
+                    total_flights_2 = avg_flights_2 / total_flights_2
+
+            # Add stats to matrix
             matrix[i].append(total_flights_1)
             matrix[j].append(total_flights_2)
 
-            total_flights_2 = 0
-            total_flights_1 = 0
+            # Zero out variables before query again
+            total_flights_2 = total_flights_1 = avg_flights_2 = avg_flights_1 = 0
 
     matrix[len(airports)-1].append(0)
     return matrix
+
+def get_pct_delay(vol_flights, num_delay):
+    """ This function takes two matrices as input and returns a new matrix which
+    contains the percentage of delayed flights for each corresponding matrix location 
+    in the inputs.  This resulting matrix will be used for D3 chord chart display
+    in /datavispctdelay """
+
+    matrix = [[] for _ in xrange(len(airports))]
+
+    for i in range (len(airports)):
+        for j in range (len(airports)):
+            if (vol_flights[i][j] == 0):
+                matrix[i].append(0)
+            else:
+                matrix[i].append(100 * num_delay[i][j] / float(vol_flights[i][j]))
+
+    return matrix
+
