@@ -7,9 +7,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask import (Flask, render_template, redirect, request, flash,
                    session, jsonify)
 
-from model import Flight, Carrier, connect_to_db, db
-from functions import (get_flight_results, get_info_from_flight, date_valid, all_airports)
-from datavis import (get_data_for_vis, get_pct_delay, get_top_ten, VOL, AVG_DELAY, NUM_DELAY, SCORE)
+from model import Flight, Carrier, Score, connect_to_db, db
+from functions import (get_flight_results, get_info_from_flight, date_valid, build_scores)
+from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE)
 from datavis import cur_airports
 
 
@@ -134,10 +134,10 @@ def data_vis_score():
     chord chart """
     matrix = get_data_for_vis(SCORE, cur_airports)
     matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
-    matrix3 = get_data_for_vis(SCORE, all_airports.keys())
-    top_ten = get_top_ten(matrix3, all_airports.keys())
 
-    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, top_ten=top_ten, all_airports=all_airports)
+    # Create a list of lists containing airport code, city name and score to pass to client
+    all_scores = build_scores()
+    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, all_scores=all_scores)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

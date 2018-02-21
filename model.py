@@ -47,6 +47,20 @@ class Carrier(db.Model):
                                                         self.name,
                                                         self.img))
 
+class Score(db.Model):
+    """ Table of Airport Scores """
+
+    __tablename__ = "scores"
+
+    airport_code = db.Column(db.String(3), primary_key=True)
+    city = db.Column(db.String(100))
+    score = db.Column(db.Integer)
+
+    def __repr__(self):
+
+        return ("<airport_code={} city={} score={}>".format(self.airport_code, self.city, self.score))
+
+
 ##############################################################################
 # Helper functions
 

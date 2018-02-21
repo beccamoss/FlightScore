@@ -13,19 +13,15 @@
         <div id="chart"></div>
       </td>
       <td>
-        <div>Top Ten List</div>
-        <table id="TopTen"></table>
+        <table id="TopFlightScores"></table>
           <script>
-                topTen = {{ top_ten|safe }};
-                airports = {{ all_airports|safe }};
-
-                let tableHtml = ""
-
-                for (i = 0; i < topTen.length; i++) {
-                  tableHtml += "<tr><td>" + airports[topTen[i][0]] + " (" + topTen[i][0] + ")</td>";
-                  tableHtml += "<td>" + topTen[i][1] + "</td></tr>";
-                $("#TopTen").html(tableHtml)
-              }
+                let allScores = {{ all_scores|tojson }};
+                let tableHtml = "<thead><th>Airports By FlightScore</th></thead>";
+                for (var i=0; i < allScores.length; i++) {
+                  tableHtml += "<tr><td>" + allScores[i][1] + " (" + allScores[i][0] + ")</td>";
+                  tableHtml += "<td>" + allScores[i][2] + "</td></tr>";
+                }
+                $("#TopFlightScores").html(tableHtml)
           </script>
       </td></tr>
     </table>
