@@ -10,7 +10,8 @@ from flask import (Flask, render_template, redirect, request, flash,
 from model import Flight, Carrier, connect_to_db, db
 from functions import (get_flight_results, get_info_from_flight, date_valid)
                        
-from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE)
+from datavis import (get_data_for_vis, get_pct_delay, get_top_ten, VOL, AVG_DELAY, NUM_DELAY, SCORE)
+from datavis import all_airports, cur_airports
 
 app = Flask(__name__)
 
@@ -93,7 +94,7 @@ def data_vis():
     database and puts them into a matrix format which will be the input for our D3
     data visualization of airport traffic """
 
-    matrix = get_data_for_vis(VOL)
+    matrix = get_data_for_vis(VOL, cur_airports)
 
     return render_template("datavis.html", vol_flights=matrix)
 
@@ -106,9 +107,9 @@ def data_vis_pct_delay():
     chart visualization.  We also pass in vol_flights so we can display overall stats
     for each airport """
 
-    matrix = get_data_for_vis(VOL)
-    matrix2 = get_data_for_vis(NUM_DELAY)
-    matrix3 = get_pct_delay(matrix, matrix2)
+    matrix = get_data_for_vis(VOL, cur_airports)
+    matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
+    matrix3 = get_pct_delay(matrix, matrix2, cur_airports)
 
     return render_template("datavispctdelay.html", vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3)
 
@@ -119,8 +120,8 @@ def data_vis_avg_delay():
     two matrices are then passed along to datavisavgdelay.html for display in a D3
     chord chart """
 
-    matrix = get_data_for_vis(AVG_DELAY)
-    matrix2 = get_data_for_vis(NUM_DELAY)
+    matrix = get_data_for_vis(AVG_DELAY, cur_airports)
+    matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
     return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2)
 
 @app.route('/datavisscore')
@@ -130,9 +131,12 @@ def data_vis_score():
     two matrices are then passed along to datavisavgdelay.html for display in a D3
     chord chart """
     
-    matrix = get_data_for_vis(SCORE)
-    matrix2 = get_data_for_vis(NUM_DELAY)
-    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2)
+    matrix = get_data_for_vis(SCORE, cur_airports)
+    matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
+    matrix3 = get_data_for_vis(SCORE, all_airports)
+    top_ten = get_top_ten(matrix3, all_airports)
+
+    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, top_ten=top_ten)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

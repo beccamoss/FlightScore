@@ -8,7 +8,26 @@
 </div>
 <div class="row">
 <div class="col-lg-8 col-lg-offset-1 col-med-8 col-med-offset-1 col-sm-8 col-sm-offset-1">
-<div id="chart"></div>
+  <table class='table'>
+      <tr><td>
+        <div id="chart"></div>
+      </td>
+      <td>
+        <div>Top Ten List</div>
+        <table id="TopTen"></table>
+          <script>
+                topTen = {{ top_ten|safe }};
+
+                let tableHtml = ""
+
+                for (i = 0; i < topTen.length; i++) {
+                  tableHtml += "<tr><td>" + topTen[i][0] + "</td>";
+                  tableHtml += "<td>" + topTen[i][1] + "</td></tr>";
+                $("#TopTen").html(tableHtml)
+              }
+          </script>
+      </td></tr>
+    </table>
 </div>
 </div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
