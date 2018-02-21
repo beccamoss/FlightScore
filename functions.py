@@ -247,3 +247,12 @@ def date_valid(date):
             return True
     except: 
         return False
+
+def list_from_tuples(lst):
+    new_lst = []
+    for tup in lst:
+        sub_lst = []
+        sub_lst.append(tup[0])
+        sub_lst.append(tup[1])
+        new_lst.append(sub_lst)
+    return new_lst
