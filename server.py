@@ -8,10 +8,12 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session, jsonify)
 
 from model import Flight, Carrier, connect_to_db, db
-from functions import (get_flight_results, get_info_from_flight, date_valid)
-                       
+from functions import (get_flight_results, get_info_from_flight, date_valid, all_airports)
 from datavis import (get_data_for_vis, get_pct_delay, get_top_ten, VOL, AVG_DELAY, NUM_DELAY, SCORE)
-from datavis import all_airports, cur_airports
+from datavis import cur_airports
+
+
+
 
 app = Flask(__name__)
 
@@ -130,13 +132,12 @@ def data_vis_score():
     also calculates a weighted average of delayed flights between each city.  these
     two matrices are then passed along to datavisavgdelay.html for display in a D3
     chord chart """
-    
     matrix = get_data_for_vis(SCORE, cur_airports)
     matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
-    matrix3 = get_data_for_vis(SCORE, all_airports)
-    top_ten = get_top_ten(matrix3, all_airports)
+    matrix3 = get_data_for_vis(SCORE, all_airports.keys())
+    top_ten = get_top_ten(matrix3, all_airports.keys())
 
-    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, top_ten=top_ten)
+    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, top_ten=top_ten, all_airports=all_airports)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
@@ -151,3 +152,4 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
 
     app.run(port=5000, host='0.0.0.0')
+    

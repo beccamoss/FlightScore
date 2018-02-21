@@ -10,6 +10,8 @@ AFTERNOON = 2
 EVENING = 3
 REDEYE = 4
 
+all_airports = {}
+
 
 def query_QPX(parameter):
     """Send query with parameter and url to QPX"""  
@@ -248,11 +250,10 @@ def date_valid(date):
     except: 
         return False
 
-def list_from_tuples(lst):
-    new_lst = []
-    for tup in lst:
-        sub_lst = []
-        sub_lst.append(tup[0])
-        sub_lst.append(tup[1])
-        new_lst.append(sub_lst)
-    return new_lst
+
+with open('allairports.txt', 'r') as f:
+    for line in f:
+        code, city = line.split(',')
+        all_airports[code] = city.rstrip()
+            
+     
