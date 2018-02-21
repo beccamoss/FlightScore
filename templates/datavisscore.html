@@ -17,11 +17,12 @@
         <table id="TopTen"></table>
           <script>
                 topTen = {{ top_ten|safe }};
+                airports = {{ all_airports|safe }};
 
                 let tableHtml = ""
 
                 for (i = 0; i < topTen.length; i++) {
-                  tableHtml += "<tr><td>" + topTen[i][0] + "</td>";
+                  tableHtml += "<tr><td>" + airports[topTen[i][0]] + " (" + topTen[i][0] + ")</td>";
                   tableHtml += "<td>" + topTen[i][1] + "</td></tr>";
                 $("#TopTen").html(tableHtml)
               }

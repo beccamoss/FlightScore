@@ -5,10 +5,8 @@ from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
 
-# 10 Busiest airports
 cur_airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"]
-all_airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"]
-
+all_airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA", "PDX"]
 VOL = 1
 NUM_DELAY = 2
 AVG_DELAY = 3
