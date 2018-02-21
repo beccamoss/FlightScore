@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row">
-<div class="col-lg-8 col-lg-offset-2 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
+<div class="col-lg-10 col-lg-offset-1 col-med-10 col-med-offset-1 col-sm-10 col-sm-offset-1">
 <h1>FlightScore</h1> 
-<h3>2017 Average FlightScore Between Airports</h3>
+<h3>2017 Average FlightScore Between Ten Busiest US Airports</h3>
 </div>
 </div>
 <div class="row">
-<div class="col-lg-8 col-lg-offset-1 col-med-8 col-med-offset-1 col-sm-8 col-sm-offset-1">
+<div class="col-lg-10 col-med-10 col-sm-10">
   <table class='table'>
-      <tr><td>
+      <tr><td align='center'>
         <div id="chart"></div>
       </td>
-      <td>
-        <table id="TopFlightScores"></table>
+      <td align='left'><b>Flight Scores For 50 Busiest Airports</b>
+        <table class="table-striped sortable" id="TopFlightScores"></table>
           <script>
-                let allScores = {{ all_scores|tojson }};
-                let tableHtml = "<thead><th>Airports By FlightScore</th></thead>";
-                for (var i=0; i < allScores.length; i++) {
-                  tableHtml += "<tr><td>" + allScores[i][1] + " (" + allScores[i][0] + ")</td>";
-                  tableHtml += "<td>" + allScores[i][2] + "</td></tr>";
-                }
-                $("#TopFlightScores").html(tableHtml)
+            let allScores = {{ all_scores|tojson }};
+            let tableHtml = "<thead><th>Airport</th><th>FlightScore</th></thead>";
+            for (var i=0; i < allScores.length; i++) {
+              tableHtml += "<tr><td>" + allScores[i][1] + " (" + allScores[i][0] + ")</td>";
+              tableHtml += "<td align='right'>" + allScores[i][2] + "</td></tr>";
+            }
+            $("#TopFlightScores").html(tableHtml)
           </script>
       </td></tr>
     </table>
@@ -29,21 +29,20 @@
 </div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
-var num_flights = {{ vol_flights }};
 var score = {{ score }};
 
     ////////////////////////////////////////////////////////////
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
     var margin = {left:10, top:10, right:10, bottom:10},
-      width =  750, // more flexibility: Math.min(window.innerWidth, 1000)
-      height =  750, // same: Math.min(window.innerWidth, 1000)
+      width =  700, // more flexibility: Math.min(window.innerWidth, 1000)
+      height =  700, // same: Math.min(window.innerWidth, 1000)
       innerRadius = Math.min(width, height) * .39,
       outerRadius = innerRadius * 1.1;
 
     var colors = ["#301E1E", "#083E77", "#342350", "#567235", "#8B161C", 
                   "#DF7C00", "#669999", "#F26223", "ac7339", "b8b894"],
-        names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "SJC", "SEA"],
+        names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"],
         opacityDefault = 0.8;
       
     ////////////////////////////////////////////////////////////
@@ -104,7 +103,7 @@ var score = {{ score }};
            .attr("href", function(d) { return "#group" + d.index;})
            .text(function(chords, i){
               var weightedScores = sumFlights = num_legs = 0;
-              for (j=0; j<num_flights.length; j++) {
+              for (j=0; j<names.length; j++) {
                   weightedScores += (score[i][j] + score[j][i]);
                   if (score[i][j] != 0)
                     num_legs += 2
@@ -115,7 +114,7 @@ var score = {{ score }};
 // Add a mouseover title.
   outerArcs.append("title").text(function(d, i) {
     var weightedScores = sumFlights = num_legs = 0;
-    for (j=0; j<num_flights.length; j++) {
+    for (j=0; j<names.length; j++) {
         weightedScores += (score[i][j] + score[j][i]);
         if (score[i][j] != 0)
           num_legs += 2

@@ -10,9 +10,6 @@ AFTERNOON = 2
 EVENING = 3
 REDEYE = 4
 
-# all_airports = {}
-
-
 def query_QPX(parameter):
     """Send query with parameter and url to QPX"""  
 
@@ -175,7 +172,9 @@ def get_info_from_flight(airline_code, origin_code, destination_code, departure_
 
 def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     """ given a flight search result, query the database to get the
-    corresponding FlightScore, return that score """
+    corresponding FlightScore for a flight that shares the same characteristics
+    including: departure time, time of year, carrier name, origin and destination,
+    then return the Flight data for that matching flight """
    
     month = int(flight_datetime[5:7])
     hour = int(flight_datetime[11:13])
@@ -206,7 +205,7 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
                                                   Flight.quarter == quarter,
                                                   Flight.time == time).first()
 
-    # If no results returned, try querying again with a code share
+    # If no results returned, try querying again with a code share airline
     if not flight_info:
         carrier = get_code_share(carrier)
         flight_info = db.session.query(Flight).filter(Flight.carrier == carrier,
@@ -217,12 +216,15 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     return flight_info
 
 def get_code_share(carrier):
+    """ This function maps carriers to one another that have code share flights.  
+    These code shares are used to requery the database if no FlightScore is returned
+    for a particular QPX search """
 
-    if carrier == "UA":
+    if carrier == "UA": # United == Skywest
         return "OO"
     elif carrier == "OO":
         return "UA"
-    elif carrier == "AK":
+    elif carrier == "AK": # Alaska == Virgin
         return "VX"
     elif carrier == "VX":
         return "AK"
@@ -251,6 +253,11 @@ def date_valid(date):
         return False
 
 def build_scores():
+    """ This function queries the Score table and builds a list containing lists
+    of data for each airport including airport code, city name, and corresponding
+    FlightScore.  It then sorts this list by highest FlightScore and returns it ready
+    to be sent to the client for display """
+
     all_scores = []
 
     scores = db.session.query(Score).all()
@@ -261,6 +268,9 @@ def build_scores():
         data.append(score.city)
         data.append(score.score)
         all_scores.append(data)
+
+    # Sort by highest FlightScore    
     all_scores.sort(key=lambda lst: lst[2], reverse=True)
+
     return all_scores
      

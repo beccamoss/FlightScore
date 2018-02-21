@@ -12,9 +12,6 @@ from functions import (get_flight_results, get_info_from_flight, date_valid, bui
 from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE)
 from datavis import cur_airports
 
-
-
-
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
@@ -132,12 +129,15 @@ def data_vis_score():
     also calculates a weighted average of delayed flights between each city.  these
     two matrices are then passed along to datavisavgdelay.html for display in a D3
     chord chart """
+
+    # Get matrix of scores for 10 busiest airports for D3 vis
     matrix = get_data_for_vis(SCORE, cur_airports)
-    matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
 
     # Create a list of lists containing airport code, city name and score to pass to client
+    # for ALL 50 airports for table display
     all_scores = build_scores()
-    return render_template("datavisscore.html", score=matrix, vol_flights=matrix2, all_scores=all_scores)
+    
+    return render_template("datavisscore.html", score=matrix, all_scores=all_scores)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
