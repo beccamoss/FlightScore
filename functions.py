@@ -1,7 +1,7 @@
 import urllib2
 import json
 import os
-from model import Flight, Carrier, connect_to_db, db
+from model import Flight, Carrier, Score, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -10,7 +10,7 @@ AFTERNOON = 2
 EVENING = 3
 REDEYE = 4
 
-all_airports = {}
+# all_airports = {}
 
 
 def query_QPX(parameter):
@@ -250,10 +250,17 @@ def date_valid(date):
     except: 
         return False
 
+def build_scores():
+    all_scores = []
 
-with open('allairports.txt', 'r') as f:
-    for line in f:
-        code, city = line.split(',')
-        all_airports[code] = city.rstrip()
-            
+    scores = db.session.query(Score).all()
+    
+    for score in scores:
+        data = []
+        data.append(score.airport_code)
+        data.append(score.city)
+        data.append(score.score)
+        all_scores.append(data)
+    all_scores.sort(key=lambda lst: lst[2], reverse=True)
+    return all_scores
      
