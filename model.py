@@ -57,6 +57,7 @@ class Score(db.Model):
     score = db.Column(db.Integer)
 
     def __repr__(self):
+        """Provide helpful representation when printed."""
 
         return ("<airport_code={} city={} score={}>".format(self.airport_code, self.city, self.score))
 

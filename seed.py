@@ -31,6 +31,10 @@ def load_flights():
     return
 
 def load_carriers():
+    """ Load all the airline carriers from a file containing their code and full name.
+    Also allowed room in the table for a url to an image corresponding to that airline,
+    but that isn't implemented right now """
+    
     for row in open("seed_data/carriers.txt"):
         row = row.strip()
         code, name = row.split("|")
@@ -53,6 +57,8 @@ def load_carriers():
     return
 
 def load_airports_from_file():
+    """ This function loads the 50 busiest airports from a file, including their
+    city and state """
 
     with open('seed_data/allairports.txt', 'r') as f:
         for line in f:
@@ -61,9 +67,12 @@ def load_airports_from_file():
     return
 
 def calculate_scores():
+    """ This function calculates the FlightScore for every airport, looking at the
+    performance data of all flights originating and departing from that airport in
+    2017. These calculated scores and stored in a dictionary whose keys are the 
+    corresponding airport code."""
+
     all_scores = {}
-    # top_ten = {}
-    # min_score = 100
     sumScores = numLegs = 0
     i = j = 0
 
@@ -77,7 +86,6 @@ def calculate_scores():
             if scores[i][j] != 0:
                 numLegs = numLegs + 2
 
-        # import pdb; pdb.set_trace()
         all_scores[origin_code] = sumScores / numLegs
         sumScores = numLegs = 0
         i += 1
@@ -86,8 +94,18 @@ def calculate_scores():
 
 
 def load_scores():
+    """ This function seeds the scores database table.  It does this by first loading
+    in all the airports from a file.  It then calculates all the scores of each 
+    airport.  Then creates a Score object containing airport code, city and score,
+    adds it, and commits it to the database """
+
+    # Loads the 50 busiest airports from a file, with both the code and their city/state
     load_airports_from_file()
+
+    # Calculate the FlightScores for each airport
     airports_and_scores = calculate_scores()
+
+    # Seed the table
     for airport in airports_and_scores.keys():
         score = Score(airport_code=airport, city=all_airports[airport], score=airports_and_scores[airport])
 
@@ -105,7 +123,6 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import different types of data
-    # load_airports()
     load_carriers()
     load_flights()
     load_scores()
