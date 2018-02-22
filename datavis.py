@@ -12,6 +12,7 @@ VOL = 1
 NUM_DELAY = 2
 AVG_DELAY = 3
 SCORE = 4
+PCT_DELAY = 5
 
 def get_data_for_vis(data_type, query_airports):
     """ 

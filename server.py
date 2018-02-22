@@ -8,8 +8,8 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session, jsonify)
 
 from model import Flight, Carrier, Score, connect_to_db, db
-from functions import (get_flight_results, get_info_from_flight, date_valid, build_scores)
-from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE)
+from functions import (get_flight_results, get_info_from_flight, date_valid, build_stats)
+from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE, PCT_DELAY)
 from datavis import cur_airports
 
 app = Flask(__name__)
@@ -94,8 +94,9 @@ def data_vis():
     data visualization of airport traffic """
 
     matrix = get_data_for_vis(VOL, cur_airports)
+    all_scores = build_stats(VOL)
 
-    return render_template("datavis.html", vol_flights=matrix)
+    return render_template("datavis.html", vol_flights=matrix, all_scores=all_scores)
 
 @app.route('/datavispctdelay')
 def data_vis_pct_delay():
@@ -109,8 +110,9 @@ def data_vis_pct_delay():
     matrix = get_data_for_vis(VOL, cur_airports)
     matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
     matrix3 = get_pct_delay(matrix, matrix2, cur_airports)
+    all_scores = build_stats(PCT_DELAY)
 
-    return render_template("datavispctdelay.html", vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3)
+    return render_template("datavispctdelay.html", vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3, all_scores=all_scores)
 
 @app.route('/datavisavgdelay')
 def data_vis_avg_delay():
@@ -121,7 +123,9 @@ def data_vis_avg_delay():
 
     matrix = get_data_for_vis(AVG_DELAY, cur_airports)
     matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
-    return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2)
+    all_scores = build_stats(AVG_DELAY)
+
+    return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2, all_scores=all_scores)
 
 @app.route('/datavisscore')
 def data_vis_score():
@@ -135,7 +139,7 @@ def data_vis_score():
 
     # Create a list of lists containing airport code, city name and score to pass to client
     # for ALL 50 airports for table display
-    all_scores = build_scores()
+    all_scores = build_stats(SCORE)
     
     return render_template("datavisscore.html", score=matrix, all_scores=all_scores)
 

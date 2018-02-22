@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row">
-<div class="col-lg-8 col-lg-offset-2 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
+<div class="col-lg-10 col-lg-offset-1 col-med-10 col-med-offset-1 col-sm-10 col-sm-offset-1">
 <h1>FlightScore</h1> 
 <h3>2017 Average Length Of Delay Over 30 Minutes</h3>
 </div>
 </div>
 <div class="row">
-<div class="col-lg-8 col-lg-offset-1 col-med-8 col-med-offset-1 col-sm-8 col-sm-offset-1">
-<div id="chart"></div>
+<div class="col-lg-10 col-med-10 col-sm-10">
+  <table class='table'>
+      <tr><td align='center'>
+        <div id="chart"></div>
+      </td>
+      <td align='left'><b>50 Busiest Airports</b>
+        <table class="table-striped sortable" id="TopFlightScores"></table>
+          <script>
+            let allScores = {{ all_scores|tojson }};
+            let tableHtml = "<thead><th>Airport</th><th>Minute Delay</th></thead>";
+            for (var i=0; i < allScores.length; i++) {
+              tableHtml += "<tr><td>" + allScores[i][1] + " (" + allScores[i][0] + ")</td>";
+              tableHtml += "<td align='right'>" + allScores[i][2] + "</td></tr>";
+            }
+            $("#TopFlightScores").html(tableHtml)
+          </script>
+      </td></tr>
+    </table>
 </div>
 </div>
 <script src="https://d3js.org/d3.v4.min.js"></script>

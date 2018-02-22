@@ -4,6 +4,7 @@ import os
 from model import Flight, Carrier, Score, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from datavis import VOL, AVG_DELAY, SCORE, PCT_DELAY
 
 MORNING = 1
 AFTERNOON = 2
@@ -260,7 +261,7 @@ def date_valid(date):
     except: 
         return False
 
-def build_scores():
+def build_stats(data_type):
     """ This function queries the Score table and builds a list containing lists
     of data for each airport including airport code, city name, and corresponding
     FlightScore.  It then sorts this list by highest FlightScore and returns it ready
@@ -274,7 +275,15 @@ def build_scores():
         data = []
         data.append(score.airport_code)
         data.append(score.city)
-        data.append(score.score)
+        if data_type == SCORE:
+            data.append(score.score)
+        elif data_type == PCT_DELAY:
+            data.append(score.pct_delay)
+        elif data_type == AVG_DELAY:
+            data.append(score.avg_delay)
+        elif data_type == VOL:
+            data.append(score.volume)
+
         all_scores.append(data)
 
     # Sort by highest FlightScore    
