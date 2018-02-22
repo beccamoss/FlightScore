@@ -55,11 +55,15 @@ class Score(db.Model):
     airport_code = db.Column(db.String(3), primary_key=True)
     city = db.Column(db.String(100))
     score = db.Column(db.Integer)
+    volume = db.Column(db.Integer)
+    pct_delay = db.Column(db.Float)
+    avg_delay = db.Column(db.Integer)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<airport_code={} city={} score={}>".format(self.airport_code, self.city, self.score))
+        return ("<airport_code={} city={} score={} volume={} pct_delay={} avg_delay={}>"
+                .format(self.airport_code, self.city, self.score, self.volume, self.pct_delay, self.avg_delay))
 
 
 ##############################################################################
