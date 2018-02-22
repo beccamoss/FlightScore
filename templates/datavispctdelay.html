@@ -87,7 +87,15 @@ var pct_delay = {{ pct_delay }};
            .attr("dy", 18)
            .append("textPath")
            .attr("href", function(d) { return "#group" + d.index;})
-           .text(function(chords, i){return names[i];})
+           .text(function(chords, i){
+              var sumFlights = 0;
+              var sumDelays = 0;
+
+              for (j=0; j<num_flights.length; j++) {
+                  sumFlights += num_flights[i][j];
+                  sumDelays += num_delayed[i][j]; }
+              return names[i] + ": " + (100 * sumDelays / sumFlights).toFixed(1) + "% Delayed";
+            })
            .style("fill", "white");
 
 // Add a mouseover title.

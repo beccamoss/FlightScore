@@ -3,6 +3,7 @@ from server import app
 from model import connect_to_db, db, example_data
 from flask import session
 import functions
+import doctest
 
 class FlaskTests(TestCase):
     """Flask tests."""
@@ -27,6 +28,7 @@ class FlaskTests(TestCase):
 
         result = self.client.get("/about")
         self.assertIn("6M", result.data)
+
 
 class FlaskSearch(TestCase):
     """ Flask tests that test the input fields on the home page """
@@ -119,14 +121,53 @@ class FlaskTestsDatabase(TestCase):
         result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21")
         self.assertIn("United", result.data)
 
-    def testScoreTable(self):
+    def testFlightTable(self):
         """ Test FlightScore DB lookup"""
 
         result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21")
         self.assertIn('<meter value="70"', result.data)
 
+    def testScoreTable(self):
+        """ Test Score lookup """
+
+        result = self.client.get("/datavisscore")
+        self.assertIn('"SEA", "Seattle WA", 55', result.data)
+
+    def testDataVis(self):
+        """ Test if Data Vis for Flight Volume Displays """
+
+        result = self.client.get("/datavis")
+        self.assertIn("2017 Flight Volume", result.data)
+
+    def testDataVisPctDelay(self):
+        """ Test if Data Vis for Percent of Flights Delayed Displays """
+
+        result = self.client.get("/datavispctdelay")
+        self.assertIn("Delayed Over 30 Minutes",  result.data)
+
+    def testDataVisAvgDelay(self):
+        """ Test if Data Vis for Average Length of Delay Displays """
+
+        result = self.client.get("/datavisavgdelay")
+        self.assertIn("Average Length Of Delay", result.data)
+
+class UnitTests(TestCase):
+
+    def testGetCodeShare(self):
+
+        result = functions.get_code_share("OO")
+        self.assertEqual(result, "UA")
+
+        result = functions.get_code_share("VX")
+        self.assertEqual(result, "AK")
+
+        result = functions.get_code_share("AA")
+        self.assertEqual(result, "AA")
+
+        result = functions.get_code_share("AK")
+        self.assertEqual(result, "VX")
 
 if __name__ == '__main__':
     import unittest
-
     unittest.main()
+

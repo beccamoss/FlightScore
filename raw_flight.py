@@ -222,7 +222,7 @@ def map_scores():
     # and date from high to low by score
     all_scores.sort(reverse=True)
 
-    # Assigns a new score spreading all flights evening across all scores
+    # Assigns a new score spreading all flights evenly across all scores
     for i in range(len(all_scores)):
         k = all_scores[i][2]
         j = all_scores[i][3]
@@ -234,8 +234,18 @@ def map_scores():
 
 
 if __name__ == "__main__":
+
+    # Initialize Default Dictionary
     raw_flight_data = makehash()
+
+    # Load all 2017 flight data into raw_flight_data dict
     load_flight_data()
+
+    # Calculate flight scores for each flight flight
     calculate_flight_score()
+
+    # Map and distribute normalized flights evenly across all scores from 1-100
     map_scores()
+
+    # Write all data to file for later seeding to database using seed.py
     write_flight_data_to_file() 

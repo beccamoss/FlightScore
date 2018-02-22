@@ -218,7 +218,15 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
 def get_code_share(carrier):
     """ This function maps carriers to one another that have code share flights.  
     These code shares are used to requery the database if no FlightScore is returned
-    for a particular QPX search """
+    for a particular QPX search 
+
+    >>> "OO"
+    "UA"
+    >>> "VX"
+    "AK"
+    >>> "AA"
+    "AA"
+    """
 
     if carrier == "UA": # United == Skywest
         return "OO"

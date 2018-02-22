@@ -86,14 +86,22 @@ var avg_len_delay = {{ min_delay }};
            .attr("dy", 18)
            .append("textPath")
            .attr("href", function(d) { return "#group" + d.index;})
-           .text(function(chords, i){return names[i];})
+           .text(function(chords, i){
+              var weightedDelays = 0;
+              var sumDelays = 0;
+
+              for (j=0; j<num_delay.length; j++) {
+                  weightedDelays += (avg_len_delay[i][j] * num_delay[i][j]);
+                  sumDelays += num_delay[i][j];
+              }
+            return names[i] + ": " + (weightedDelays / sumDelays).toFixed(0) + " Minute Avg Delay";})
            .style("fill", "white");
 
 // Add a mouseover title.
   outerArcs.append("title").text(function(d, i) {
     var weightedDelays = 0;
     var sumDelays = 0;
-    //debugger;
+
     for (j=0; j<num_delay.length; j++) {
         weightedDelays += (avg_len_delay[i][j] * num_delay[i][j]);
         sumDelays += num_delay[i][j];
