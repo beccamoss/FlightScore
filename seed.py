@@ -76,7 +76,7 @@ def calculate_scores():
     sumScores = numLegs = 0
     i = j = 0
 
-    # Query the database to get all scores between all airports
+    # Query the database to get all FlightScores between all airports
     scores = get_data_for_vis(SCORE, all_airports.keys())
 
     # Calculate average FlightScore for each airport between all airports in all_airports

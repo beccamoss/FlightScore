@@ -84,7 +84,12 @@ var matrix = {{ vol_flights }};
            .attr("dy", 18)
            .append("textPath")
            .attr("href", function(d) { return "#group" + d.index;})
-           .text(function(chords, i){return names[i];})
+           .text(function(chords, i){
+              var sumFlights = 0;
+                  for (j=0; j<matrix.length; j++) {
+                      sumFlights += matrix[i][j];
+                  }
+              return names[i] + ": " + sumFlights.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");})
            .style("fill", "white");
 
 // Add a mouseover title.

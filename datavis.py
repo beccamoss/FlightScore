@@ -4,8 +4,10 @@ import os
 from model import Flight, Carrier, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
-
+# Hard coded list of the 10 busiest airports in the US
 cur_airports = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"]
+
+# Constants used to distinguish what kinds of data is required for Data Vis
 VOL = 1
 NUM_DELAY = 2
 AVG_DELAY = 3

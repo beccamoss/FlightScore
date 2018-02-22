@@ -84,10 +84,26 @@ def example_data():
   
     f1 = Flight(origin="SEA", destination="SFO", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
     f2 = Flight(origin="ORD", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
+    f3 = Flight(origin="LAX", destination="SFO", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
+    f4 = Flight(origin="DFW", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
+    f5 = Flight(origin="CLT", destination="SFO", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
+    f6 = Flight(origin="LAS", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
+    f7 = Flight(origin="JFK", destination="SFO", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
+    f8 = Flight(origin="DEN", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
+    f9 = Flight(origin="ATL", destination="LAX", carrier="NK", quarter=1, time=2, num_flights=10, num_delayed=1, num_cancel_divert=1, duration=120, avg_delay=40, score=65)
+    f10 = Flight(origin="SFO", destination="DFW", carrier="UA", quarter=1, time=2, num_flights=20, num_delayed=3, num_cancel_divert=0, duration=110, avg_delay=35, score=70)
 
-    db.session.add_all([f1, f2])
+
+    db.session.add_all([f1, f2, f3, f4, f5, f6, f7, f8, f9, f10])
     db.session.commit()
 
+    s1 = Score(airport_code="SEA", city="Seattle WA", score=55)
+    s2 = Score(airport_code="SFO", city="San Francisco CA", score=35)
+    s3 = Score(airport_code="DFW", city="Dallas TX", score=45)
+    s4 = Score(airport_code="ORD", city="Chicago IL", score=40)
+
+    db.session.add_all([s1, s2, s3, s4])
+    db.session.commit()
 
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
