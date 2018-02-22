@@ -96,7 +96,7 @@ def data_vis():
     matrix = get_data_for_vis(VOL, cur_airports)
     all_scores = build_stats(VOL)
 
-    return render_template("datavis.html", vol_flights=matrix, all_scores=all_scores)
+    return render_template("datavis.html", names=cur_airports, vol_flights=matrix, all_scores=all_scores)
 
 @app.route('/datavispctdelay')
 def data_vis_pct_delay():
@@ -112,7 +112,7 @@ def data_vis_pct_delay():
     matrix3 = get_pct_delay(matrix, matrix2, cur_airports)
     all_scores = build_stats(PCT_DELAY)
 
-    return render_template("datavispctdelay.html", vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3, all_scores=all_scores)
+    return render_template("datavispctdelay.html", names=cur_airports, vol_flights=matrix, num_delay=matrix2, pct_delay=matrix3, all_scores=all_scores)
 
 @app.route('/datavisavgdelay')
 def data_vis_avg_delay():
@@ -125,7 +125,7 @@ def data_vis_avg_delay():
     matrix2 = get_data_for_vis(NUM_DELAY, cur_airports)
     all_scores = build_stats(AVG_DELAY)
 
-    return render_template("datavisavgdelay.html", min_delay=matrix, num_delay=matrix2, all_scores=all_scores)
+    return render_template("datavisavgdelay.html", names=cur_airports, min_delay=matrix, num_delay=matrix2, all_scores=all_scores)
 
 @app.route('/datavisscore')
 def data_vis_score():
@@ -141,7 +141,7 @@ def data_vis_score():
     # for ALL 50 airports for table display
     all_scores = build_stats(SCORE)
     
-    return render_template("datavisscore.html", score=matrix, all_scores=all_scores)
+    return render_template("datavisscore.html", names=cur_airports, score=matrix, all_scores=all_scores)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
