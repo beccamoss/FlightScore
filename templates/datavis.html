@@ -41,7 +41,7 @@ var matrix = {{ vol_flights }};
 
     var colors = ["#301E1E", "#083E77", "#342350", "#567235", "#8B161C", 
                   "#DF7C00", "#669999", "#F26223", "ac7339", "b8b894"],
-        names = ["ATL", "LAX", "ORD", "DFW", "JFK", "DEN", "SFO", "LAS", "CLT", "SEA"],
+        names = {{ names|tojson }},
         opacityDefault = 0.8;
       
     ////////////////////////////////////////////////////////////
