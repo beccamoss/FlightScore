@@ -10,3 +10,7 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-style: bold;
     font-size: 12px;
 }
+
+.nav a {
+    font-style: bold;
+}

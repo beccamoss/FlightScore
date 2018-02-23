@@ -1,35 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row">
-<div class="col-lg-8 col-lg-offset-4 col-med-8 col-med-offset-4 col-sm-8 col-sm-offset-2">
+<div class="row" style="margin-top: 100px">
+<div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
 <span id="homepage" style="hidden"></span>
-<h1>FlightScore</h1> 
 <h3>Flight Search</h3>
-<h5><a href="/about">Methodology</a></h5>
 </div>
 </div>
-<br><br>
+
 <div class="row">
-<div class="col-lg-8 col-lg-offset-4 col-med-8 col-med-offset-4 col-sm-8 col-sm-offset-2">
-<form action="/search">
+<div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
+<form action="/search" id="form1">
     <ul>
         {% for message in get_flashed_messages() %}
             <li>{{ message }}</li>
         {% endfor %}
     </ul>
-    <label>Origin:</label>
-     <div class="ui-widget">
-        <label for="origin"></label>
-        <input name='origin' id="origin">
-    </div>   
+    <div class="input-group ui-widget">
+        <span class="input-group-addon" id="basic-addon1">From</span>
+        <input name='origin' id="origin" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
+    </div>
     <br><br>
-    <label>Destination:</label>
-    <div class="ui-widget">
-        <label for="destination"></label>
-        <input name='destination' id="destination">
-    </div>   
-
-    <div>
+    <div class="input-group ui-widget">
+        <span class="input-group-addon" id="basic-addon1">To&nbsp&nbsp&nbsp&nbsp</span>
+        <input name='destination' id="destination" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
     </div>
     <br><br>
     <label>Date:</label>
@@ -37,7 +30,7 @@
     <input id="date" name="date" type="date">
     </div>
     <br><br>
-    <input type='submit' value='Search Flights'>
+    <button type='submit' form="form1" value='Search Flights' class="btn btn-primary btn-lg">Search Flights</button
 </form>
 </div>
 </div>

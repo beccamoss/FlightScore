@@ -1,15 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row">
-<div class="col-lg-10 col-lg-offset-1 col-med-10 col-med-offset-1 col-sm-10 col-sm-offset-1">
-<h1>FlightScore</h1> 
-<h3>2017 Average Length Of Delay Over 30 Minutes</h3>
-</div>
-</div>
-<div class="row">
+<div class="row" style="margin-top: 50px">
 <div class="col-lg-10 col-med-10 col-sm-10">
   <table class='table'>
       <tr><td align='center'>
+        <h4 style="margin-bottom: 0px">2017 Average Length Of Delay Over 30 Minutes</h4>
         <div id="chart"></div>
       </td>
       <td align='left'><b>50 Busiest Airports</b>
@@ -110,7 +105,7 @@ var avg_len_delay = {{ min_delay }};
                   weightedDelays += (avg_len_delay[i][j] * num_delay[i][j]);
                   sumDelays += num_delay[i][j];
               }
-            return names[i] + ": " + (weightedDelays / sumDelays).toFixed(0) + " Minute Avg Delay";})
+            return names[i] + ": " + (weightedDelays / sumDelays).toFixed(0) + " Minute Delay";})
            .style("fill", "white");
 
 // Add a mouseover title.
