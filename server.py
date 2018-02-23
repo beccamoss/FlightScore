@@ -61,7 +61,8 @@ def search_flights():
         flash("No results returned from API")
         return render_template("home.html")
 
-    return render_template("results.html",
+    return render_template("results.html", 
+                           date=date,
                            results=results,
                            origin=origin_description,
                            destination=destination_description)

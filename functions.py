@@ -207,36 +207,35 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
                                                   Flight.time == time).first()
 
     # If no results returned, try querying again with a code share airline
+
     if not flight_info:
-        carrier = get_code_share(carrier)
-        flight_info = db.session.query(Flight).filter(Flight.carrier == carrier,
+        carriers = get_code_share(carrier)
+        for carrier in carriers:
+            flight_info = db.session.query(Flight).filter(Flight.carrier == carrier,
                                                       Flight.origin == origin,
                                                       Flight.destination == destination,
                                                       Flight.quarter == quarter,
                                                       Flight.time == time).first()
+            if flight_info:
+                break
+
     return flight_info
+
 
 def get_code_share(carrier):
     """ This function maps carriers to one another that have code share flights.  
     These code shares are used to requery the database if no FlightScore is returned
     for a particular QPX search 
-
-    >>> "OO"
-    "UA"
-    >>> "VX"
-    "AK"
-    >>> "AA"
-    "AA"
     """
 
     if carrier == "UA": # United == Skywest
-        return "OO"
+        return ["OO"]
     elif carrier == "OO":
-        return "UA"
-    elif carrier == "AK": # Alaska == Virgin
-        return "VX"
+        return ["UA"]
+    elif carrier == "AS": # Alaska == Virgin
+        return ["QX", "VX", "OO"]
     elif carrier == "VX":
-        return "AK"
+        return ["AS", "QX", "OO"]
     else:
         return carrier
 
