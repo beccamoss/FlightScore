@@ -207,7 +207,6 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
                                                   Flight.time == time).first()
 
     # If no results returned, try querying again with a code share airline
-
     if not flight_info:
         carriers = get_code_share(carrier)
         for carrier in carriers:
@@ -262,9 +261,10 @@ def date_valid(date):
 
 def build_stats(data_type):
     """ This function queries the Score table and builds a list containing lists
-    of data for each airport including airport code, city name, and corresponding
-    FlightScore.  It then sorts this list by highest FlightScore and returns it ready
-    to be sent to the client for display """
+    of data for each airport including airport code, city name, and the datat
+    type requested.  Either FlightScore, flight volume, percent delayed or 
+    average delay in minutes.  It then sorts this list by highest data key-value
+    and returns it ready to be sent to the client for display """
 
     all_scores = []
 

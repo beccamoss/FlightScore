@@ -53,6 +53,7 @@ def search_flights():
     if not date_valid(date):
         flash("Please enter a valid date")
         return render_template("home.html")
+    # date = date[5:] + "-" + date[:2] + "-" + date[3:5]
 
     # use the user's input to search the Google Flight API for results
     try:
