@@ -11,10 +11,32 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/static/css/flightscore.css">
+  <!-- Bootstrap Date-Picker Plugin -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <style>
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.bg {
+    /* The image used */
+    background-image: url("static/img/background1.jpeg");
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
 </head>
 
 <body>
-<nav class="navbar navbar-fixed-top navbar-default">
+<nav  style="height: 60px" class="navbar navbar-fixed-top navbar-inverse navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/">FlightScore</a>
@@ -25,7 +47,7 @@
       <li><a href="/datavispctdelay">Percent Delay</a></li>
       <li><a href="/datavisavgdelay">Length of Delay</a></li>
       <li><a href="/datavis">Flight Volume</a></li>
-      <li><a href="/about">Methodology</a></li>
+      <li><a href="/about">About</a></li>
     </ul>
   </div>
 </nav>

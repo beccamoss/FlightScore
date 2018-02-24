@@ -1,37 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row" style="margin-top: 100px">
-<div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
-<span id="homepage" style="hidden"></span>
-<h3>Flight Search</h3>
-</div>
-</div>
 
-<div class="row">
-<div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
-<form action="/search" id="form1">
-    <ul>
-        {% for message in get_flashed_messages() %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    <div class="input-group ui-widget">
-        <span class="input-group-addon" id="basic-addon1">From</span>
-        <input name='origin' id="origin" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
+<span id="homepage" style="hidden"></span>
+<div class="bg">
+<div class="bootstrap-iso">
+  <div class="container-fluid">
+    <div class="row" style="margin-top: 300px">    
+      <div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
+        <form action="/search" id="form1">
+          <ul>
+            {% for message in get_flashed_messages() %}
+                <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+          <div class="input-group ui-widget">
+            <span class="input-group-addon" id="basic-addon1">From</span>
+            <input name='origin' id="origin" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
+          </div>
+          <br><br>
+          <div class="input-group ui-widget">
+            <span class="input-group-addon" id="basic-addon1">To&nbsp&nbsp&nbsp&nbsp</span>
+            <input name='destination' id="destination" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
+          </div>
+          <br><br>
+          <div class="form-group"> <!-- Date input -->
+            <span class="input-group-addon" id="basic-addon1">Date</span>
+            <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
+          </div>
+          <br><br>
+          <div class="form-group"> <!-- Submit button -->
+            <button type='submit' form="form1" value='Search Flights' class="btn btn-primary btn-lg">Search Flights</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <br><br>
-    <div class="input-group ui-widget">
-        <span class="input-group-addon" id="basic-addon1">To&nbsp&nbsp&nbsp&nbsp</span>
-        <input name='destination' id="destination" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
-    </div>
-    <br><br>
-    <label>Date:</label>
-    <div>
-    <input id="date" name="date" type="date">
-    </div>
-    <br><br>
-    <button type='submit' form="form1" value='Search Flights' class="btn btn-primary btn-lg">Search Flights</button
-</form>
+  </div>
 </div>
 </div>
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+        orientation: "bottom right"
+      };
+      date_input.datepicker(options);
+    })
+</script>
 {% endblock %}
