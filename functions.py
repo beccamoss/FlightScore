@@ -39,7 +39,7 @@ def QPX_results(flight_request):
 
     return python_result
 
-def get_flight_results(origin, destination, date):
+def get_flight_results(origin, destination, date, call_qpx):
     """ create the input for the QPX query based on user's input """
 
     parameter = {
@@ -51,26 +51,30 @@ def get_flight_results(origin, destination, date):
             "date": date,
             "maxStops": 0
             }],
-        # "solutions": 10
         }
     }
 
-    # Query the Google Flights Api
-    python_result = flight_results(parameter)
+    if call_qpx:
+        # Query the QPX Express Api
+        python_result = flight_results(parameter)
     
-    # write out results to file for reuse. Limited to 50 API calls/day
-    # write_flight_results_to_files(python_result)
+        # write out results to file for reuse. Limited to 50 API calls/day
+        # write_flight_results_to_files(python_result)
 
-    # read in test data instead of calling API.  Limited to 50 API calls/day
-    # python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
+        # read in test data instead of calling API.  Limited to 50 API calls/day
+        # python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
 
-    # Take the result and parse to just get the information we need
-    flights = parse_flight_results(python_result)
+        # Take the result and parse to just get the information we need
+        flights = parse_flight_results(python_result)
+    else:
+        # Don't call the API, instead query the database to show FlightScores
+        # for possible future flights based on 2017 data
+        flights = get_flights_from_db(origin, destination, date)
 
     return flights
 
 def flight_results(parameter):
-    """ Call Google Flights API """
+    """ Call QPX Express API """
     # import pdb; pdb.set_trace()
     flight_request = query_QPX(parameter)
     return QPX_results(flight_request)
@@ -83,14 +87,14 @@ def flight_results_from_file(filename):
     return python_result
 
 def write_flight_results_to_files(python_result):
-    """ Write Google Flights search results to file to prevent overuse of API """
+    """ Write QPX Express search results to file to prevent overuse of API """
 
     with open('seed_data/demoflightsearch.txt', 'w') as outfile:
         json.dump(python_result, outfile)
 
 def parse_flight_results(python_result):
     """ take the API search result and parse it.  Put the relevant info into a flight_info
-    dictinary and append it to a list of flights."""
+    dictionary and append it to a list of flights."""
 
     flights = []
 
@@ -123,6 +127,67 @@ def parse_flight_results(python_result):
 
     return flights
 
+def get_flights_from_db(origin, destination, date):
+    """ This function us called when we are not calling the QPX Exress API.  Instead,
+    we are querying the database for all flights between origin and destination for
+    the quarter in which the date falls.  It then builds a list of flights for each
+    airline and time of day with corresponding flight scores for display in 
+    resultsdb.html """
+
+    flights = []
+
+    # Set the quarter of the year by the month
+    quarter = get_quarter_from_month(int(date[5:7]))
+
+    # Query the database to get all stats from that that quarter of the year betwee
+    # the two specified cities for all times of day
+    flights_from_db = db.session.query(Flight).filter(Flight.origin == origin,
+                                              Flight.destination == destination,
+                                              Flight.quarter == quarter).all()
+    
+    # Loop through each record returned from the database query, and build the dictionary
+    # of info to add to the flights list
+    for flight in flights_from_db:
+        flight_info = {}
+        flight_info["airline_code"] = flight.carrier
+        flight_info["origin_code"] = flight.origin
+        flight_info["destination_code"] = flight.destination
+        flight_info["score"] = str(flight.score)
+        flight_info["time"] = get_time(flight.time)
+        # Query the Carrier table to get the full name of the airline
+        flight_info["carrier"] = db.session.query(Carrier.name).filter(Carrier.carrier_id == flight_info["airline_code"]).first()
+
+        # Append this to the flights list
+        flights.append(flight_info)
+
+    return flights
+
+
+def get_time(time):
+    """ Get string reflecting the time slice to display in HTML"""
+
+    if time == 1:
+        return 'Morning'
+    elif time == 2:
+        return 'Afternoon'
+    elif time == 3:
+        return 'Evening'
+    else:
+        return 'Red-Eye'
+
+def get_quarter_from_month(month):
+    """ Get the quarter of the year based on the month """
+
+    if month < 4:
+        quarter = 1
+    elif month < 7:
+        quarter = 2
+    elif month < 10:
+        quarter = 3
+    else:
+        quarter = 4
+    return quarter
+
 def get_score_for_flight(airline_code, origin_code, destination_code, departure_datetime):
     """ Look up the score for the flight with similar characteristics. Return the score """
     
@@ -134,27 +199,26 @@ def get_score_for_flight(airline_code, origin_code, destination_code, departure_
 
     # If flight history in database is insufficient for prediction, set
     # score to N/A
-    # if flight == None or flight.num_flights < 5:
     if flight == None:
         return "N/A"
     return flight.score
 
 
-def get_info_from_flight(airline_code, origin_code, destination_code, departure_datetime):
+def get_info_from_flight(airline_code, origin_code, destination_code, departure_datetime, date=None):
     """ This function is called from an AJAX request to get stats for the 
     selected FlightScore """
 
     flight_info = {}
+
+    # If QPX Express API not called, mock a departure time to reflect the time of day
+    if departure_datetime in ["Morning", "Afternoon", 'Evening', "Red-Eye"]:
+        departure_datetime = mock_departure_from_time(departure_datetime, date)
 
     # Get the past history flight data and score for matching flight from db
     flight = get_matching_flight_from_db(airline_code,
                                          origin_code,
                                          destination_code,
                                          departure_datetime)
-
-    # If flight history in database is insufficient for prediction, set
-    # score to N/A
-    # if flight == None or flight.num_flights < 5:  
 
     if flight == None:
         flight_info["avg_delay"] = ''
@@ -181,14 +245,7 @@ def get_matching_flight_from_db(carrier, origin, destination, flight_datetime):
     hour = int(flight_datetime[11:13])
    
     # Set the quarter of the year by the month
-    if month < 4:
-        quarter = 1
-    elif month < 7:
-        quarter = 2
-    elif month < 10:
-        quarter = 3
-    else:
-        quarter = 4
+    quarter = get_quarter_from_month(month)
 
     # Set the slice of day by the hour:
     if (hour >= 5) and (hour < 11):
@@ -258,6 +315,22 @@ def date_valid(date):
             return True
     except: 
         return False
+
+def mock_departure_from_time(departure, date):
+    """ This function takes in a departure date and a string containing the
+    time of day and 'mocks' a fake departure date and time for database query since
+    we aren't calling the QPX Express API and getting specific flight dates 
+    and times """
+
+    if departure == "Morning":
+        return date + "-06"
+    elif departure == "Afternoon":
+        return date + "-12"
+    elif departure == "Evening":
+        return date + "-18"
+    else:
+        return date + "-01"
+
 
 def build_stats(data_type):
     """ This function queries the Score table and builds a list containing lists

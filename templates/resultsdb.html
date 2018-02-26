@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row" style="margin-top: 150px">
+<div class="col-lg-8 col-lg-offset-2">
+<h4 style="color: gray">Search Results for {{ date }}</h4>
+</div>
+</div>
+
+<div class="row">
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 hidden-xs">
+<table class="table table-striped sortable">
+<thead>
+    <tr>
+        <th>FlightScore</th>
+        <th>Airline</th>
+        <th>Time of Day</th>
+        <th class="sorttable_nosort">From</th>
+        <th class="sorttable_nosort">To</th>
+    </tr>
+</thead>
+<tbody id="flights">
+   
+    {% for flight in results %}
+    <tr>
+        <td>          
+          <button data-flight-id="{{ flight['airline_code']+flight['time'] }}" data-origin-code= "{{ flight['origin_code'] }}" data-dest-code="{{ flight['destination_code'] }}" data-depart="{{ flight['time'] }}" data-date="{{ date }}" type="button" class="btn btn-info btn-lg flightstats">
+            <meter value="{{ flight["score"] }}" min="0" max = "100" low = "30" high = "65" optimum = "85"></meter> {{ flight["score"] }}
+          </button>
+          
+          <div id="div-{{ flight['airline_code']+flight['time'] }}" style="display: none;">
+            <ul style="padding-top: 20px">
+              <li id="pd-{{ flight['airline_code']+flight['time'] }}"></li>
+              <li id="ad-{{ flight['airline_code']+flight['time'] }}"></li>
+              <li id="pc-{{ flight['airline_code']+flight['time'] }}"></li>
+            </ul>
+          </div>
+        </td>
+        <td>{{ flight['carrier'][0] }}</td>
+        <td>{{ flight['time'] }}</td>
+        <td>{{ flight['origin_code'] }} - {{ origin }}</td>
+        <td>{{ flight['destination_code'] }} - {{ destination }}</td>
+
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+ <script>
+      function toggleView() {
+          // Data about the flight is stored in data fields on the button which was 
+          // clicked, so let's first extract these values and pass them to requestStats
+          // if view is visible
+          let flightId = $(this).data("flightId");
+          let origin = $(this).data("originCode");
+          let destination = $(this).data("destCode");
+          let depart = $(this).data("depart");
+          let date = $(this).data("date");
+
+          // Toggle the view of stats 
+          $('#div-'+ flightId).toggle();
+          
+          // Get stats if div is visible!
+          if ($('#div-'+ flightId).is(':visible'))
+            $.get("/getstats", {flightId: flightId, origin: origin, destination: destination, depart: depart, date:date}, addStats);
+      }
+      
+      function addStats(results) {
+          // Get the stats out of the JSON returned from the server and add them
+          // to the HTML in the appropriate place
+          $('#pd-' + results['flightId']).html("Delayed: " + results['pctDelay'] + "%");
+          $('#ad-' + results['flightId']).html("Avg Delay: " + results['avgDelay'] + " min");
+          $('#pc-' + results['flightId']).html("Pct Cancel: " + results['pctCancel'] + "%");
+      }
+
+      $(".flightstats").on('click', toggleView);
+  </script>
+</div>
+</div>
+{% endblock %}
