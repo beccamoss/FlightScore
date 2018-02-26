@@ -1,24 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row" style="margin-top: 60px">
-<div class="col-lg-10 col-med-10 col-sm-10">
+<div class="row" style="margin-top: 100px">
+<div class="col-lg-10 col-lg-offset-1 col-med-12 col-med-offset-1 col-sm-12">
+  <h2 style="margin-bottom: 0px">Busiest US Airports for Domestic Flights</h2>
   <table class='table'>
-      <tr><td align='center'>
-        <div id="chart"></div>
-        <h2 style="margin-bottom: 0px">2017 Flight Volume Between 10 Busiest US Airports</h2>
-      </td>
-      <td align='left'><b>50 Busiest US Airports</b>
+    <tr>
+      <td align='left'><br>
         <table class="table-striped sortable" id="TopFlightScores"></table>
           <script>
             let allScores = {{ all_scores|tojson }};
-            let tableHtml = "<thead><th>Airport</th><th>US Flight Volume</th></thead>";
+            let tableHtml = "<thead><th>Airport</th><th>Number of Flights</th></thead>";
             for (var i=0; i < allScores.length; i++) {
               tableHtml += "<tr><td>" + allScores[i][1] + " (" + allScores[i][0] + ")</td>";
               tableHtml += "<td align='right'>" + allScores[i][2].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</td></tr>";
             }
             $("#TopFlightScores").html(tableHtml)
           </script>
-      </td></tr>
+      </td>
+      <td align='center'>
+        
+        <div id="chart"></div>
+        <h3>Number of flights between the 10 busiest US airports</h3>
+      </td>
+    </tr>
     </table>
 </div>
 </div>
@@ -29,8 +33,8 @@ var matrix = {{ vol_flights }};
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
     var margin = {left:10, top:10, right:10, bottom:10},
-      width =  650, // more flexibility: Math.min(window.innerWidth, 1000)
-      height =  650, // same: Math.min(window.innerWidth, 1000)
+      width =  750, // more flexibility: Math.min(window.innerWidth, 1000)
+      height =  750, // same: Math.min(window.innerWidth, 1000)
       innerRadius = Math.min(width, height) * .39,
       outerRadius = innerRadius * 1.1;
 

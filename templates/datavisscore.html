@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row" style="margin-top: 60px">
-  <div class="col-lg-10 col-med-10 col-sm-10">
+<div class="row" style="margin-top: 100px">
+  <div class="col-lg-10 col-lg-offset-1 col-med-12 col-med-offset-1 col-sm-12">
+  <h2 style="margin-bottom: 0px">FlightScores for Domestic Flights</h2>
   <table class='table'>
       <tr>
-        <td align='center'>
-          <div id="chart"></div>
-          <h2>2017 FlightScore Between 10 Busiest US Airports</h2>
-        </td>
-        <td align='left'><b>50 Busiest US Airports</b>
+        <td align='left'><br>
           <table class="table-striped sortable" id="TopFlightScores" ></table>
           <script>
             let allScores = {{ all_scores|tojson }};
@@ -19,6 +16,10 @@
             }
             $("#TopFlightScores").html(tableHtml)
           </script>
+        </td>
+        <td align='center'>
+          <div id="chart"></div>
+          <h3>Average FlightScores betweeen the 10 busiest US airports</h3>
         </td>
       </tr>
   </table>
@@ -34,8 +35,8 @@ var score = {{ score }};
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
     var margin = {left:10, top:10, right:10, bottom:10},
-      width =  650, // more flexibility: Math.min(window.innerWidth, 1000)
-      height =  650, // same: Math.min(window.innerWidth, 1000)
+      width =  750, // more flexibility: Math.min(window.innerWidth, 1000)
+      height =  750, // same: Math.min(window.innerWidth, 1000)
       innerRadius = Math.min(width, height) * .39,
       outerRadius = innerRadius * 1.1;
 
