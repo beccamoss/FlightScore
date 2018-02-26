@@ -11,3 +11,41 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-size: 12px;
 }
 
+/* navbar */
+nav {
+  height:100px;
+}
+
+/* Title */
+.navbar-default .navbar-brand {
+  color: #777;
+  /*    background-color: #669999;*/
+  font-style: italic;
+  font-weight: 150;
+  font-size: 30px;
+}
+
+/* Menu items */
+nav a {
+  font-size: 22px;
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bg {
+    /* The image used */
+    background-image: url("../img/background.jpeg");
+
+    /* Full height */
+    height: 90%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

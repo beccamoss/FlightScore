@@ -5,14 +5,9 @@
 <div class="bg">
 <div class="bootstrap-iso">
   <div class="container-fluid">
-    <div class="row" style="margin-top: 20%">    
+    <div class="row" style="margin-top: 25%">    
       <div class="col-lg-4 col-lg-offset-2 col-med-4 col-med-offset-2 col-sm-4 col-sm-offset-2">
         <form action="/search" id="form1">
-          <ul>
-            {% for message in get_flashed_messages() %}
-                <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
           <div class="input-group ui-widget">
             <span class="input-group-addon" id="basic-addon1">From</span>
             <input name='origin' id="origin" type="text" class="form-control" placeholder="Airport Name" aria-describedby="basic-addon1">
@@ -36,6 +31,16 @@
     </div>
   </div>
 </div>
+</div>
+<div class='row'>
+      <div style='text-align: center'>
+        <ul>
+          {% for message in get_flashed_messages() %}
+              <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        <h3 style="color: gray"><span class="glyphicon">&#xe108;</span>&nbsp&nbspHelping You Make Better Travel Choices</h3>
+      </div>
 </div>
 <script>
     $(document).ready(function(){
