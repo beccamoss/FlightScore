@@ -71,7 +71,7 @@ def get_flight_results(origin, destination, date):
 
 def flight_results(parameter):
     """ Call Google Flights API """
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     flight_request = query_QPX(parameter)
     return QPX_results(flight_request)
 

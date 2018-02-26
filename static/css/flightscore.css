@@ -11,15 +11,3 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-size: 12px;
 }
 
-#background {
-    opacity: 0.1;
-    filter: alpha(opacity=50); /* For IE8 and earlier */
-}
-
-html { 
-  background: url(static/img/background1.jpeg) no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
