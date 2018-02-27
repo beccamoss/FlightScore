@@ -190,7 +190,7 @@ def get_quarter_from_month(month):
 
 def get_score_for_flight(airline_code, origin_code, destination_code, departure_datetime):
     """ Look up the score for the flight with similar characteristics. Return the score """
-    
+
     # Get the past history flight data and score for matching flight from db
     flight = get_matching_flight_from_db(airline_code,
                                          origin_code,

@@ -117,14 +117,22 @@ class FlaskTestsDatabase(TestCase):
 
     def testCarrierTable(self):
         """ Test Carrier name DB lookup"""
-
+        
         result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21")
+
         self.assertIn("United", result.data)
 
     def testFlightTable(self):
         """ Test FlightScore DB lookup"""
 
         result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21")
+        self.assertIn('<meter value="70"', result.data)
+
+    def testFlightTable(self):
+        """ Test FlightScore QPX Express call"""
+
+        call_qpx = True
+        result = self.client.get("/search?origin=ORD%2C+Chicago+IL&destination=DFW%2C+Dallas+TX&date=2018-05-21&call_qpx=True")
         self.assertIn('<meter value="70"', result.data)
 
     def testScoreTable(self):
@@ -137,35 +145,69 @@ class FlaskTestsDatabase(TestCase):
         """ Test if Data Vis for Flight Volume Displays """
 
         result = self.client.get("/datavis")
-        self.assertIn("2017 Flight Volume", result.data)
+        self.assertIn("Busiest US Airports", result.data)
 
     def testDataVisPctDelay(self):
         """ Test if Data Vis for Percent of Flights Delayed Displays """
 
         result = self.client.get("/datavispctdelay")
-        self.assertIn("Delayed Over 30 Minutes",  result.data)
+        self.assertIn("Percentage of Delayed Flights",  result.data)
 
     def testDataVisAvgDelay(self):
         """ Test if Data Vis for Average Length of Delay Displays """
 
         result = self.client.get("/datavisavgdelay")
-        self.assertIn("Average Length Of Delay", result.data)
+        self.assertIn("Average Delays Over 30 Minutes", result.data)
 
 class UnitTests(TestCase):
 
     def testGetCodeShare(self):
 
         result = functions.get_code_share("OO")
-        self.assertEqual(result, "UA")
+        self.assertEqual(result, ["UA"])
 
         result = functions.get_code_share("VX")
-        self.assertEqual(result, "AK")
+        self.assertEqual(result, ["AS", "QX", "OO"])
 
         result = functions.get_code_share("AA")
         self.assertEqual(result, "AA")
 
-        result = functions.get_code_share("AK")
-        self.assertEqual(result, "VX")
+        result = functions.get_code_share("AS")
+        self.assertEqual(result, ["QX", "VX", "OO"])
+
+    def testGetTime(self):
+
+        result = functions.get_time(1)
+        self.assertEqual(result, "Morning")
+        result = functions.get_time(2)
+        self.assertEqual(result, "Afternoon")
+        result = functions.get_time(3)
+        self.assertEqual(result, "Evening")
+        result = functions.get_time(4)
+        self.assertEqual(result, "Red-Eye")
+
+    def testGetQuarterFromMonth(self):
+
+        result = functions.get_quarter_from_month(1)
+        self.assertEqual(result, 1)
+        result = functions.get_quarter_from_month(5)
+        self.assertEqual(result, 2)
+        result = functions.get_quarter_from_month(7)
+        self.assertEqual(result, 3)
+        result = functions.get_quarter_from_month(12)
+        self.assertEqual(result, 4)
+
+
+    def testMockDepartureFromTime(self):
+
+        result = functions.mock_departure_from_time("Morning", "2018-11-01")
+        self.assertEqual(result, "2018-11-01-06")
+        result = functions.mock_departure_from_time("Afternoon", "2018-11-01")
+        self.assertEqual(result, "2018-11-01-12")
+        result = functions.mock_departure_from_time("Evening", "2018-11-01")
+        self.assertEqual(result, "2018-11-01-18")
+        result = functions.mock_departure_from_time("Red-Eye", "2018-11-01")
+        self.assertEqual(result, "2018-11-01-01")
 
 if __name__ == '__main__':
     import unittest
