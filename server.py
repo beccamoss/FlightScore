@@ -62,7 +62,6 @@ def search_flights():
         flash("Please enter a valid date")
         return render_template("home.html")
 
-    call_qpx = bool(request.args.get("call_qpx"))
     # use the user's input to call the QPX Express API for results or get back results
     # from the database if we aren't calling the API
     try:
