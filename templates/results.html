@@ -71,7 +71,7 @@
       function addStats(results) {
           // Get the stats out of the JSON returned from the server and add them
           // to the HTML in the appropriate place
-          $('#pd-' + results['flightId']).html("Delayed: " + "&nbsp &nbsp" +  results['pctDelay'] + "%");
+          $('#pd-' + results['flightId']).html("Delayed: " + "&nbsp &nbsp " +  results['pctDelay'] + "%");
           $('#ad-' + results['flightId']).html("Avg Delay: " + "&nbsp" + results['avgDelay'] + " min");
           $('#pc-' + results['flightId']).html("Pct Cancel: " + results['pctCancel'] + "%");
       }

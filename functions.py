@@ -56,13 +56,13 @@ def get_flight_results(origin, destination, date, call_qpx):
 
     if call_qpx:
         # Query the QPX Express Api
-        python_result = flight_results(parameter)
+        # python_result = flight_results(parameter)
     
         # write out results to file for reuse. Limited to 50 API calls/day
-        write_flight_results_to_files(python_result)
+        # write_flight_results_to_files(python_result)
 
         # read in test data instead of calling API.  Limited to 50 API calls/day
-        # python_result = flight_results_from_file('seed_data/demoflightsearch.txt')
+        python_result = flight_results_from_file('seed_data/demoflightsearchfinal.txt')
 
         # Take the result and parse to just get the information we need
         flights = parse_flight_results(python_result)
