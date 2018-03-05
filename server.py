@@ -8,8 +8,8 @@ from flask import (Flask, render_template, redirect, request, flash,
                    session, jsonify)
 
 from model import Flight, Carrier, Score, connect_to_db, db
-from functions import (get_flight_results, get_info_from_flight, date_valid, build_stats)
-from datavis import (get_data_for_vis, get_pct_delay, VOL, AVG_DELAY, NUM_DELAY, SCORE, PCT_DELAY)
+from functions import (get_flight_results, get_info_from_flight, date_valid)
+from datavis import (get_data_for_vis, get_pct_delay, build_stats, VOL, AVG_DELAY, NUM_DELAY, SCORE, PCT_DELAY)
 from datavis import cur_airports
 import sys
 

@@ -330,36 +330,3 @@ def mock_departure_from_time(departure, date):
         return date + "-18"
     else:
         return date + "-01"
-
-
-def build_stats(data_type):
-    """ This function queries the Score table and builds a list containing lists
-    of data for each airport including airport code, city name, and the datat
-    type requested.  Either FlightScore, flight volume, percent delayed or 
-    average delay in minutes.  It then sorts this list by highest data key-value
-    and returns it ready to be sent to the client for display """
-
-    all_scores = []
-
-    scores = db.session.query(Score).all()
-    
-    for score in scores:
-        data = []
-        data.append(score.airport_code)
-        data.append(score.city)
-        if data_type == SCORE:
-            data.append(score.score)
-        elif data_type == PCT_DELAY:
-            data.append(score.pct_delay)
-        elif data_type == AVG_DELAY:
-            data.append(score.avg_delay)
-        elif data_type == VOL:
-            data.append(score.volume)
-
-        all_scores.append(data)
-
-    # Sort by highest FlightScore    
-    all_scores.sort(key=lambda lst: lst[2], reverse=True)
-
-    return all_scores
-     

@@ -1,7 +1,7 @@
 import urllib2
 import json
 import os
-from model import Flight, Carrier, connect_to_db, db
+from model import Flight, Carrier, Score, connect_to_db, db
 from flask_sqlalchemy import SQLAlchemy
 
 # Hard coded list of the 10 busiest airports in the US
@@ -23,7 +23,7 @@ def get_data_for_vis(data_type, query_airports):
         AVG_DELAY = A weighted average of the minutes delayed between each airport
         SCORE = Calculates a weighted average of FlighScores between airports
 
-    Query the database between each airport twice - once for each directions
+    Query the database between each airport twice - once for each direction
     Calculate the totals for each flight in that flight segment
     Calculate the weighted average if necessary
     Append to matrix which will eventually be passed to D3 for display in chord chart 
@@ -56,7 +56,7 @@ def get_data_for_vis(data_type, query_airports):
                     avg_flights_1 = avg_flights_1 + (flights_1[k].score * flights_1[k].num_flights)
                     total_flights_1 = total_flights_1 + flights_1[k].num_flights
 
-            # Total stats for the other direction
+            # Total up stats for the other direction
             for k in range(len(flights_2)):
                 if data_type == VOL:
                     total_flights_2 = total_flights_2 + flights_2[k].num_flights
@@ -103,3 +103,36 @@ def get_pct_delay(vol_flights, num_delay, airports):
                 matrix[i].append(100 * num_delay[i][j] / float(vol_flights[i][j]))
 
     return matrix
+
+def build_stats(data_type):
+    """ This function queries the Score table and builds a list containing lists
+    of data for each airport including airport code, city name, and the datat
+    type requested.  Either FlightScore, flight volume, percent delayed or 
+    average delay in minutes.  It then sorts this list by highest data key-value
+    and returns it ready to be sent to the client for display in the table.  used
+    in all 4 Data Visualization pages """
+
+    all_scores = []
+
+    scores = db.session.query(Score).all()
+    
+    for score in scores:
+        data = []
+        data.append(score.airport_code)
+        data.append(score.city)
+        if data_type == SCORE:
+            data.append(score.score)
+        elif data_type == PCT_DELAY:
+            data.append(score.pct_delay)
+        elif data_type == AVG_DELAY:
+            data.append(score.avg_delay)
+        elif data_type == VOL:
+            data.append(score.volume)
+
+        all_scores.append(data)
+
+    # Sort by highest FlightScore    
+    all_scores.sort(key=lambda lst: lst[2], reverse=True)
+
+    return all_scores
+     
