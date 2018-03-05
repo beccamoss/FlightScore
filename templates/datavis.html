@@ -18,9 +18,7 @@
           </script>
       </td>
       <td align='center'>
-        
         <div id="chart"></div>
-        <h3>Number of flights between the 10 busiest US airports</h3>
       </td>
     </tr>
     </table>
@@ -32,7 +30,7 @@ var matrix = {{ vol_flights }};
     ////////////////////////////////////////////////////////////
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
-    var margin = {left:10, top:10, right:10, bottom:10},
+    var margin = {left:10, top:0, right:10, bottom:0},
       width =  700, // more flexibility: Math.min(window.innerWidth, 1000)
       height =  700, // same: Math.min(window.innerWidth, 1000)
       innerRadius = Math.min(width, height) * .39,
@@ -72,6 +70,13 @@ var matrix = {{ vol_flights }};
     .append("g")
     .attr("transform", "translate(" + (width/2 + margin.left) + "," + (height/2 + margin.top) + ")")
     .datum(chord(matrix));
+
+  svg.append("text")
+        .attr("x", 0)             
+        .attr("y", (height/2 - 5))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "20px")  
+        .text("Number of Flights Between the 10 Busiest US Airports");
 
   ////////////////////////////////////////////////////////////
   ////////////////// Draw outer Arcs /////////////////////////

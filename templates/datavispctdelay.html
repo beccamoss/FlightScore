@@ -19,7 +19,6 @@
       </td>
         <td align='center'>
         <div id="chart"></div>
-        <h3>Percentage of flights delayed over 30 minutes between the 10 busiest US airports</h3>
       </td>
       </tr>
     </table>
@@ -34,8 +33,8 @@ var pct_delay = {{ pct_delay }};
     ////////////////////////////////////////////////////////////
     //////////////////////// Set-Up ////////////////////////////
     ////////////////////////////////////////////////////////////
-    var margin = {left:10, top:10, right:10, bottom:10},
-      width =  700, // more flexibility: Math.min(window.innerWidth, 1000)
+    var margin = {left:10, top:0, right:10, bottom:0},
+      width =  750, // more flexibility: Math.min(window.innerWidth, 1000)
       height =  700, // same: Math.min(window.innerWidth, 1000)
       innerRadius = Math.min(width, height) * .39,
       outerRadius = innerRadius * 1.1;
@@ -75,6 +74,12 @@ var pct_delay = {{ pct_delay }};
     .attr("transform", "translate(" + (width/2 + margin.left) + "," + (height/2 + margin.top) + ")")
     .datum(chord(pct_delay));
 
+  svg.append("text")
+        .attr("x", 0)             
+        .attr("y", (height/2 - 5))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "20px")  
+        .text("Percentage Delayed Over 30 Minutes Between the 10 Busiest US Airports");
   ////////////////////////////////////////////////////////////
   ////////////////// Draw outer Arcs /////////////////////////
   ////////////////////////////////////////////////////////////
