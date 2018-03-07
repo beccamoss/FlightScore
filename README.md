@@ -31,17 +31,17 @@ FlightScore is an app built on a Flask server with a PostgreSQL database, with S
 
 ## Features
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/landing_screenshot.png "FlightScore Home Page")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/landing_screenshot.PNG "FlightScore Home Page")
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/results_qpx_screenshot.png "Results Page Using Flights Returned From QPX Express API")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/results_qpx_screenshot.PNG "Results Page Using Flights Returned From QPX Express API")
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/results_qpx_expand.png "Past Performance Statistics Shown Inline For Each Flight")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/results_qpx_expand.PNG "Past Performance Statistics Shown Inline For Each Flight")
 
 ![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/results_expand.png "Results Page Without QPX Express API Use")
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.png "Chart Showing Percentage of Flights Delayed Between 10 Busiest Airports - Using D3")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.PNG "Chart Showing Percentage of Flights Delayed Between 10 Busiest Airports - Using D3")
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.png "Chart Interactivity with Chord Highlighting Upon Hover")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.PNG "Chart Interactivity with Chord Highlighting Upon Hover")
 
 
 ## For Version 2.0
