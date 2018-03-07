@@ -6,7 +6,7 @@
 
 ## About the Developer
 
-FlightScore was created by Becca Moss, a software engineer in Menlo Park, CA. Read more about her on [LinkedIn](https://www.linkedin.com/in/beccamoss).
+FlightScore was created by Becca Moss, a software engineer in Menlo Park, CA. Read more about her on [LinkedIn](https://www.linkedin.com/in/becca-moss).
 
 ## Technologies
 
