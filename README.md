@@ -41,7 +41,7 @@ FlightScore is an app built on a Flask server with a PostgreSQL database, with S
 
 ![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.PNG "Chart Showing Percentage of Flights Delayed Between 10 Busiest Airports - Using D3")
 
-![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_screenshot.PNG "Chart Interactivity with Chord Highlighting Upon Hover")
+![alt text](https://github.com/beccamoss/FlightScore/blob/master/static/img/pct_delay_chord_screenshot.PNG "Chart Interactivity with Chord Highlighting Upon Hover")
 
 
 ## For Version 2.0
