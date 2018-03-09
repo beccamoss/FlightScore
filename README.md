@@ -2,6 +2,8 @@
 
 ## Summary
 
+Deployed at: http://flightscore.us
+
 **FlightScore** is a web app which helps users make better travel choices when purchasing airline tickets. By analyzing the on-time performance data of nearly 6M domestic flights in 2017, it algorithmically generates FlightScores for categories of flights, giving users more insight into how future flights may perform. This algorithm analyzes statistics between any two airports including the percentage of delayed flights, the average length of delay, and the percentage of flights cancelled or diverted, while considering the airline, time of year and departure time of each flight. Users can then make travel decisions based on both price and past performance. D3 chord charts are integrated for data visualization of these performance statistics between the ten busiest US airports.
 
 **Important:** The QPX Express API will no longer be available for use after April 10, 2018.  When this occurs, FlightScores for categories of flights will be shown instead of flights returned from the API. See screenshot further down.
