@@ -8,7 +8,7 @@
 <br><br>
 <div class="row">
 <div class="col-lg-6 col-lg-offset-3 col-med-8 col-med-offset-2 col-sm-8 col-sm-offset-2">
-FlightScore is a measure of past on-time performance of flights.  FlightScore analyzes the on-time flight performance statistics from nearly 6M domestic flights in 2017. Each flight returned from the Google Flights API is analyzed for its origin, destination, airline, time of year, and time of day. These attributes are then used to look at similar flights from 2017 to come up with a FlightScore for that future flight. Factors used to generate these scores include:
+FlightScore is a web application that gives users the ability to make travel decisions based on both price and past performance.  Under the hood, FlightScore analyzes the past performance history of nearly 6M domestic flights in 2017 to algorithmically generate FlightScores for all future flights.  The airline, origin, destination, time of year and time of day attributes are all used when analyzing statistics like the percentage of delayed flights, the length of delays and the percentage of cancelled flights. FlightScore then weights and combines these statistics to create FlightScores for future flights. Factors used to generate these scores include:
 <div><br>
 <ul>
 <li><b>Percentage of Delayed Flights</b> - A delayed flight is any flight that departs more than 30 minutes after a scheduled departure
